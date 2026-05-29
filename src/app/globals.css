@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* ── Core Background Layers ── */
+  --color-background: #09090b;
+  --color-foreground: #f4f4f5;
+  --font-sans: var(--font-inter);
+
+  /* ── Brand / Accent Colors ── */
+  --color-neon-cyan: #00f2fe;
+  --color-neon-blue: #4facfe;
+
+  /* ── Surface & Border ── */
+  --color-surface: #18181b;
+  --color-border: #27272a;
+  --color-input: #27272a;
+  --color-ring: #00f2fe;
+
+  /* ── Shadcn Semantic Tokens ── */
+  --color-primary: #f4f4f5;
+  --color-primary-foreground: #09090b;
+  --color-secondary: #27272a;
+  --color-secondary-foreground: #f4f4f5;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #f4f4f5;
+  --color-muted: #27272a;
+  --color-muted-foreground: #a1a1aa;
+  --color-accent: #27272a;
+  --color-accent-foreground: #f4f4f5;
+  --color-popover: #09090b;
+  --color-popover-foreground: #f4f4f5;
+  --color-card: #18181b;
+  --color-card-foreground: #f4f4f5;
+
+  /* ── Radius ── */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Accent gradient utility ── */
+.accent-gradient {
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+}
+.accent-text {
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.accent-glow {
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.15), 0 0 40px rgba(79, 172, 254, 0.08);
+}
+.accent-glow-sm {
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.12);
+}
+.accent-border-glow {
+  box-shadow: 0 0 0 1px rgba(0, 242, 254, 0.3), 0 0 12px rgba(0, 242, 254, 0.1);
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* ── Focus ring for inputs ── */
+input:focus, textarea:focus, select:focus {
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 0 2px rgba(0, 242, 254, 0.15) !important;
+  outline: none;
+}
+
+/* ── Smooth transitions everywhere ── */
+*, *::before, *::after {
+  transition-property: color, background-color, border-color, box-shadow, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
