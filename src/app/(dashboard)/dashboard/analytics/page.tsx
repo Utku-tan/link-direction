@@ -176,7 +176,8 @@ export default function AnalyticsPage() {
                       outerRadius={90}
                       dataKey="count"
                       nameKey="device"
-                      label={({ name, percentage }: { name: string; percentage: number }) => `${name} (${percentage}%)`}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      label={(props: any) => `${props.name} (${props.percentage}%)`}
                     >
                       {deviceData.map((_, index) => (
                         <Cell key={index} fill={COLORS[index % COLORS.length]} />
