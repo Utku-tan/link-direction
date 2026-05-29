@@ -176,7 +176,7 @@ export default function AnalyticsPage() {
                       outerRadius={90}
                       dataKey="count"
                       nameKey="device"
-                      label={({ device, percentage }) => `${device} (${percentage}%)`}
+                      label={({ name, percentage }: { name: string; percentage: number }) => `${name} (${percentage}%)`}
                     >
                       {deviceData.map((_, index) => (
                         <Cell key={index} fill={COLORS[index % COLORS.length]} />
