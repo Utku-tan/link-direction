@@ -71,7 +71,39 @@ export default function AdminUsersPage() {
           className="pl-10 bg-[#18181b] border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus:border-[#00f2fe] rounded-xl" />
       </div>
 
-      <div className="rounded-2xl border border-zinc-800 bg-[#18181b]/50 overflow-hidden">
+      {/* Mobile card view */}
+      <div className="sm:hidden space-y-3">
+        {filteredUsers.map((user) => (
+          <div key={user.id} className="rounded-2xl border border-zinc-800 bg-[#18181b]/50 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full accent-gradient flex items-center justify-center text-white text-xs font-semibold">
+                  {user.username.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-zinc-200">@{user.username}</p>
+                  <p className="text-xs text-zinc-500">{user.role}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => { setEditingUser(user); setNewLimit(user.max_link_limit) }}
+                className="text-[#00f2fe] hover:text-[#4facfe] text-xs font-medium transition-colors"
+              >
+                Limit Ayarla
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div><span className="text-zinc-500">E-posta:</span> <span className="text-zinc-300 block truncate">{user.email}</span></div>
+              <div><span className="text-zinc-500">Telefon:</span> <span className="text-zinc-300">{user.phone || '-'}</span></div>
+              <div><span className="text-zinc-500">Linkler:</span> <span className="text-zinc-300">{user.link_count} / {user.max_link_limit}</span></div>
+              <div><span className="text-zinc-500">Kayıt:</span> <span className="text-zinc-300">{formatDate(user.created_at)}</span></div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table view */}
+      <div className="hidden sm:block rounded-2xl border border-zinc-800 bg-[#18181b]/50 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>

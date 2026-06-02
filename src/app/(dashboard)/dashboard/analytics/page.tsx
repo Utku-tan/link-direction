@@ -126,7 +126,7 @@ export default function AnalyticsPage() {
           {/* Area Chart - Daily Clicks */}
           <div className="rounded-2xl border border-zinc-800 bg-[#18181b]/50 p-6">
             <h2 className="text-lg font-semibold text-zinc-100 mb-4">Tıklanma Trendi</h2>
-            <div className="h-72">
+            <div className="h-56 sm:h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={dailyClicks}>
                   <defs>
@@ -172,8 +172,8 @@ export default function AnalyticsPage() {
                       data={deviceData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={90}
+                      innerRadius={45}
+                      outerRadius={70}
                       dataKey="count"
                       nameKey="device"
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any

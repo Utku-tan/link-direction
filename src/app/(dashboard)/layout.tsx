@@ -32,7 +32,7 @@ export default async function DashboardLayout({
       <DashboardSidebar profile={profile} />
       <div className="lg:pl-72">
         <DashboardNavbar profile={profile} />
-        <main className="p-6 lg:p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>

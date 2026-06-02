@@ -31,12 +31,12 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-1/4 w-96 h-96 bg-[#00f2fe]/8 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-[#4facfe]/6 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00f2fe]/3 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-[#00f2fe]/8 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-[#4facfe]/6 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[800px] h-[400px] sm:h-[800px] bg-[#00f2fe]/3 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-28 pb-24 text-center">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-16 sm:pt-28 pb-16 sm:pb-24 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00f2fe]/8 border border-[#00f2fe]/20 text-[#00f2fe] text-sm mb-8">
             <Zap className="w-3.5 h-3.5" />
             Hızlı, güvenli ve akıllı link yönetimi
@@ -73,13 +73,13 @@ export default function LandingPage() {
           </div>
 
           {/* URL Preview */}
-          <div className="mt-14 inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#18181b]/80 border border-zinc-800 backdrop-blur-xl">
-            <div className="w-3 h-3 rounded-full bg-[#00f2fe] shadow-lg shadow-[#00f2fe]/30" />
-            <code className="text-sm text-zinc-300">
-              siteadi.com/<span className="text-[#00f2fe]">kullanici</span>/<span className="text-[#4facfe]">instagram</span>
+          <div className="mt-10 sm:mt-14 inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-3 rounded-2xl bg-[#18181b]/80 border border-zinc-800 backdrop-blur-xl max-w-full overflow-hidden">
+            <div className="w-3 h-3 rounded-full bg-[#00f2fe] shadow-lg shadow-[#00f2fe]/30 shrink-0" />
+            <code className="text-xs sm:text-sm text-zinc-300 truncate">
+              refly.world/<span className="text-[#00f2fe]">kullanici</span>/<span className="text-[#4facfe]">instagram</span>
             </code>
-            <ArrowRight className="w-4 h-4 text-zinc-600" />
-            <code className="text-sm text-zinc-500">instagram.com/profil</code>
+            <ArrowRight className="w-4 h-4 text-zinc-600 shrink-0 hidden sm:block" />
+            <code className="text-xs sm:text-sm text-zinc-500 truncate hidden sm:block">instagram.com/profil</code>
           </div>
         </div>
       </section>
@@ -144,7 +144,7 @@ export default function LandingPage() {
       <footer className="border-t border-zinc-800/50 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <Logo size="sm" />
-          <p className="text-sm text-zinc-500">© 2025 LinkDirection. Tüm hakları saklıdır.</p>
+          <p className="text-sm text-zinc-500">© 2025 Refly. Tüm hakları saklıdır.</p>
         </div>
       </footer>
     </div>
