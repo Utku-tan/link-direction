@@ -43,7 +43,7 @@ export function Logo({
 
       {showText && (
         <span className={cn(s.text, 'font-bold accent-text')}>
-          LinkDirection
+          Refly
         </span>
       )}
     </div>

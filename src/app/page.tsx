@@ -7,20 +7,20 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#09090b] text-zinc-100">
       {/* Navbar */}
       <nav className="border-b border-zinc-800/50 backdrop-blur-xl bg-[#09090b]/80 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
           <Link href="/">
             <Logo />
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <Link
               href="/login"
-              className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+              className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
             >
               Giriş Yap
             </Link>
             <Link
               href="/register"
-              className="px-4 py-2 text-sm font-medium accent-gradient text-white rounded-xl transition-all duration-200 accent-glow-sm hover:opacity-90"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium accent-gradient text-white rounded-lg sm:rounded-xl transition-all duration-200 accent-glow-sm hover:opacity-90"
             >
               Ücretsiz Başla
             </Link>
@@ -37,12 +37,12 @@ export default function LandingPage() {
         </div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-16 sm:pt-28 pb-16 sm:pb-24 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00f2fe]/8 border border-[#00f2fe]/20 text-[#00f2fe] text-sm mb-8">
-            <Zap className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#00f2fe]/8 border border-[#00f2fe]/20 text-[#00f2fe] text-xs sm:text-sm mb-6 sm:mb-8">
+            <Zap className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
             Hızlı, güvenli ve akıllı link yönetimi
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
             Linklerinizi{' '}
             <span className="accent-text">Yönetin</span>
             ,{' '}
@@ -51,22 +51,22 @@ export default function LandingPage() {
             <span className="accent-text">Takip Edin</span>
           </h1>
 
-          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-4 sm:mt-6 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
             Kişisel kısa linkler oluşturun, tıklanma istatistiklerinizi anlık takip edin 
             ve linklerinizi tek bir panelden yönetin.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-8 py-3.5 text-base font-medium accent-gradient text-white rounded-xl transition-all duration-200 accent-glow hover:opacity-90"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 text-sm sm:text-base font-medium accent-gradient text-white rounded-xl transition-all duration-200 accent-glow hover:opacity-90 w-full sm:w-auto justify-center"
             >
               Ücretsiz Hesap Oluştur
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 px-8 py-3.5 text-base font-medium text-zinc-300 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-all duration-200 hover:bg-zinc-800/50"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 text-sm sm:text-base font-medium text-zinc-300 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-all duration-200 hover:bg-zinc-800/50 w-full sm:w-auto justify-center"
             >
               Giriş Yap
             </Link>
@@ -85,14 +85,14 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="py-24 border-t border-zinc-800/50">
+      <section className="py-14 sm:py-24 border-t border-zinc-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-zinc-100 tracking-tight">Özellikler</h2>
+          <div className="text-center mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 tracking-tight">Özellikler</h2>
             <p className="mt-3 text-zinc-400">Link yönetiminizi kolaylaştıran güçlü araçlar</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
               {
                 icon: Zap,
