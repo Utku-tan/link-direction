@@ -17,6 +17,7 @@ export function RegisterForm() {
   const [businessName, setBusinessName] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -51,7 +52,7 @@ export function RegisterForm() {
         return
       }
 
-      const { error } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -65,23 +66,52 @@ export function RegisterForm() {
         },
       })
 
-      if (error) {
-        if (error.message.includes('already registered')) {
+      if (signUpError) {
+        if (signUpError.message.includes('already registered')) {
           setError('Bu e-posta adresi zaten kayıtlı.')
         } else {
-          console.error(error)
-          setError(error.message || 'Kayıt olurken bir hata oluştu. Lütfen tekrar deneyin.')
+          console.error(signUpError)
+          setError(signUpError.message || 'Kayıt olurken bir hata oluştu.')
         }
+        setLoading(false)
         return
       }
 
+      // E-posta onayı gerekiyorsa (session yoksa) başarı ekranı göster
+      if (data?.user && !data.session) {
+        setSuccess(true)
+        setLoading(false)
+        return
+      }
+
+      // Session varsa (auto-confirm açıksa) direkt dashboard'a yönlendir
       router.push('/dashboard')
       router.refresh()
-    } catch {
-      setError('Bir hata oluştu. Lütfen tekrar deneyin.')
+    } catch (err) {
+      console.error('Registration error:', err)
+      setError('Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.')
     } finally {
       setLoading(false)
     }
+  }
+
+  // E-posta onay başarı ekranı
+  if (success) {
+    return (
+      <div className="rounded-2xl border border-zinc-800 bg-[#18181b]/50 backdrop-blur-xl p-8 shadow-2xl text-center">
+        <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-emerald-500/10 flex items-center justify-center">
+          <Mail className="w-8 h-8 text-emerald-400" />
+        </div>
+        <h2 className="text-xl font-semibold text-zinc-100 mb-2">E-postanızı Onaylayın</h2>
+        <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+          <strong className="text-zinc-200">{email}</strong> adresine bir onay bağlantısı gönderdik.
+          Hesabınızı aktifleştirmek için lütfen e-postanızdaki bağlantıya tıklayın.
+        </p>
+        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs leading-relaxed">
+          💡 E-posta birkaç dakika içinde gelmezse spam/gereksiz klasörünü kontrol edin.
+        </div>
+      </div>
+    )
   }
 
   return (
