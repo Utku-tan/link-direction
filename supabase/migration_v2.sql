@@ -3,6 +3,11 @@
 -- Bu SQL'i Supabase Studio > SQL Editor'da çalıştırın
 -- =============================================
 
+-- Dönüş tipi değişen fonksiyonları önce sil
+DROP FUNCTION IF EXISTS public.admin_get_all_users();
+DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
+
+
 -- =============================================
 -- 1. PROFILES TABLOSU GÜNCELLEMELERİ
 -- =============================================
@@ -230,6 +235,12 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger'ı yeniden oluştur (CASCADE ile silindiği için)
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_new_user();
 
 -- Admin fonksiyonu güncelleme
 CREATE OR REPLACE FUNCTION public.admin_get_all_users()
