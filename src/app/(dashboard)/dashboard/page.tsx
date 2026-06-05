@@ -1,10 +1,16 @@
 import { createClient } from '@/lib/supabase/server'
 import { formatNumber } from '@/lib/utils'
-import { LinkIcon, BarChart3, MousePointerClick, Zap } from 'lucide-react'
+import { LinkIcon, BarChart3, MousePointerClick, Zap, Wifi, ShieldAlert } from 'lucide-react'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user!.id)
+    .single()
 
   const { data: links } = await supabase
     .from('links')
@@ -12,15 +18,22 @@ export default async function DashboardPage() {
     .eq('user_id', user!.id)
     .order('created_at', { ascending: false })
 
+  const { data: devices } = await supabase
+    .from('nfc_devices')
+    .select('*')
+    .eq('user_id', user!.id)
+
   const totalLinks = links?.length || 0
   const activeLinks = links?.filter(l => l.is_active).length || 0
   const totalClicks = links?.reduce((sum, l) => sum + (l.click_count || 0), 0) || 0
+  const totalDevices = devices?.length || 0
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const linkIds = links?.map(l => l.id) || []
   
   let clicksToday = 0
+  let blockedClicks = 0
   if (linkIds.length > 0) {
     const { count } = await supabase
       .from('analytics')
@@ -28,23 +41,46 @@ export default async function DashboardPage() {
       .in('link_id', linkIds)
       .gte('clicked_at', today.toISOString())
     clicksToday = count || 0
+
+    // İşletme ise engellenen tıklanmaları say
+    if (profile?.account_type === 'business') {
+      const deviceIds = devices?.map(d => d.id) || []
+      if (deviceIds.length > 0) {
+        const { count: blocked } = await supabase
+          .from('analytics')
+          .select('*', { count: 'exact', head: true })
+          .in('nfc_device_id', deviceIds)
+          .eq('is_cooldown_blocked', true)
+        blockedClicks = blocked || 0
+      }
+    }
   }
+
+  const isBusiness = profile?.account_type === 'business'
 
   const stats = [
     { label: 'Toplam Link', value: formatNumber(totalLinks), icon: LinkIcon, gradient: 'from-[#00f2fe] to-[#4facfe]' },
     { label: 'Aktif Linkler', value: formatNumber(activeLinks), icon: Zap, gradient: 'from-emerald-400 to-emerald-500' },
     { label: 'Toplam Tıklanma', value: formatNumber(totalClicks), icon: MousePointerClick, gradient: 'from-[#4facfe] to-[#00f2fe]' },
     { label: 'Bugün Tıklanma', value: formatNumber(clicksToday), icon: BarChart3, gradient: 'from-amber-400 to-amber-500' },
+    { label: isBusiness ? 'Masa / Stant' : 'NFC Cihaz', value: formatNumber(totalDevices), icon: Wifi, gradient: 'from-violet-400 to-violet-500' },
+    ...(isBusiness ? [
+      { label: 'Engellenen Suiistimal', value: formatNumber(blockedClicks), icon: ShieldAlert, gradient: 'from-red-400 to-red-500' },
+    ] : []),
   ]
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">Genel Bakış</h1>
-        <p className="text-zinc-400 mt-1">Link performansınızın özeti</p>
+        <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">
+          {isBusiness ? `${profile.business_name || 'İşletme'} Paneli` : 'Genel Bakış'}
+        </h1>
+        <p className="text-zinc-400 mt-1">
+          {isBusiness ? 'İşletme ve cihaz performansınızın özeti' : 'Link performansınızın özeti'}
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat) => (
           <div
             key={stat.label}

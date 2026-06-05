@@ -112,12 +112,18 @@ export async function GET(
   else if (userAgent.includes('Safari')) browser = 'Safari'
   else if (userAgent.includes('Opera') || userAgent.includes('OPR')) browser = 'Opera'
 
+  // Get visitor IP
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+    || request.headers.get('x-real-ip')
+    || 'unknown'
+
   // Record analytics (non-blocking — don't await)
   supabase.from('analytics').insert({
     link_id,
     device,
     browser,
     referrer,
+    ip_address: ip,
   }).then(() => {})
 
   // Increment click count (non-blocking)

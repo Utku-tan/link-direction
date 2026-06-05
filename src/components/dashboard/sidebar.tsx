@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut } from 'lucide-react'
+import { LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut, Wifi } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Logo } from '@/components/logo'
@@ -61,6 +61,30 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
             </Link>
           )
         })}
+
+        {/* NFC Devices - dynamic label */}
+        {(() => {
+          const devicesItem = {
+            href: '/dashboard/devices',
+            label: profile.account_type === 'business' ? 'Masalarım / Stantlarım' : 'Cihazlarım',
+            icon: Wifi,
+          }
+          const isActive = pathname === devicesItem.href
+          return (
+            <Link
+              href={devicesItem.href}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                isActive
+                  ? 'bg-[#00f2fe]/10 text-[#00f2fe] accent-border-glow'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+              )}
+            >
+              <devicesItem.icon className="w-5 h-5" />
+              {devicesItem.label}
+            </Link>
+          )
+        })()}
 
         {profile.role === 'admin' && (
           <>

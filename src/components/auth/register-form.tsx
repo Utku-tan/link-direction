@@ -5,13 +5,16 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, Mail, Lock, User, Phone } from 'lucide-react'
+import { Loader2, Mail, Lock, User, Phone, Building2, UserCircle } from 'lucide-react'
+import type { AccountType } from '@/lib/types'
 
 export function RegisterForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
   const [phone, setPhone] = useState('')
+  const [accountType, setAccountType] = useState<AccountType>('individual')
+  const [businessName, setBusinessName] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -25,6 +28,12 @@ export function RegisterForm() {
     const formattedUsername = username.toLowerCase().trim()
     if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(formattedUsername) || formattedUsername.length < 3) {
       setError('Kullanıcı adı en az 3 karakter, sadece küçük harf, rakam ve tire içermelidir.')
+      setLoading(false)
+      return
+    }
+
+    if (accountType === 'business' && !businessName.trim()) {
+      setError('İşletme hesabı için işletme adı zorunludur.')
       setLoading(false)
       return
     }
@@ -50,6 +59,8 @@ export function RegisterForm() {
           data: {
             username: formattedUsername,
             phone: phone || null,
+            account_type: accountType,
+            business_name: accountType === 'business' ? businessName.trim() : null,
           },
         },
       })
@@ -82,6 +93,56 @@ export function RegisterForm() {
           </div>
         )}
 
+        {/* Hesap Tipi Seçici */}
+        <div className="space-y-2">
+          <Label className="text-zinc-300">Hesap Türü</Label>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setAccountType('individual')}
+              className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                accountType === 'individual'
+                  ? 'bg-[#00f2fe]/10 border-[#00f2fe]/40 text-[#00f2fe] border'
+                  : 'bg-[#09090b] border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600'
+              }`}
+            >
+              <UserCircle className="w-4 h-4" />
+              Bireysel
+            </button>
+            <button
+              type="button"
+              onClick={() => setAccountType('business')}
+              className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                accountType === 'business'
+                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 border'
+                  : 'bg-[#09090b] border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600'
+              }`}
+            >
+              <Building2 className="w-4 h-4" />
+              İşletme
+            </button>
+          </div>
+        </div>
+
+        {/* İşletme Adı (sadece business seçildiğinde) */}
+        {accountType === 'business' && (
+          <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+            <Label htmlFor="business_name" className="text-zinc-300">İşletme Adı</Label>
+            <div className="relative">
+              <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Input
+                id="business_name"
+                type="text"
+                placeholder="Kafe Adı, Restoran vb."
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                required
+                className="pl-10 bg-[#18181b] border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus:border-amber-400 rounded-xl"
+              />
+            </div>
+          </div>
+        )}
+
         <div className="space-y-2">
           <Label htmlFor="username" className="text-zinc-300">Kullanıcı Adı</Label>
           <div className="relative">
@@ -98,7 +159,7 @@ export function RegisterForm() {
               className="pl-10 bg-[#18181b] border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus:border-[#00f2fe] rounded-xl"
             />
           </div>
-          <p className="text-xs text-zinc-500">Linkleriniz: siteadi.com/{username || 'kullaniciadi'}/slug</p>
+          <p className="text-xs text-zinc-500">Linkleriniz: refly.world/{username || 'kullaniciadi'}/slug</p>
         </div>
 
         <div className="space-y-2">

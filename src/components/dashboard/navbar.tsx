@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Menu, X, LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut } from 'lucide-react'
+import { Menu, X, LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut, Wifi } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import type { Profile } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -79,6 +79,28 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
                   </Link>
                 )
               })}
+
+              {/* NFC Devices */}
+              {(() => {
+                const devicesHref = '/dashboard/devices'
+                const devicesLabel = profile.account_type === 'business' ? 'Masalarım / Stantlarım' : 'Cihazlarım'
+                const isActive = pathname === devicesHref
+                return (
+                  <Link
+                    href={devicesHref}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium transition-all',
+                      isActive
+                        ? 'bg-[#00f2fe]/10 text-[#00f2fe]'
+                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                    )}
+                  >
+                    <Wifi className="w-5 h-5" />
+                    {devicesLabel}
+                  </Link>
+                )
+              })()}
               {profile.role === 'admin' && (
                 <>
                   <div className="my-3 border-t border-zinc-800" />
