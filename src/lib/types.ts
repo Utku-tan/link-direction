@@ -56,13 +56,12 @@ export interface AnalyticsEvent {
   is_cooldown_blocked: boolean;
 }
 
-export interface LoyaltyPoints {
+export interface LoyaltyStar {
   id: string;
-  customer_ip: string;
-  business_user_id: string;
-  nfc_device_id: string | null;
-  points: number;
-  last_earned_at: string;
+  business_id: string;
+  visitor_uuid: string;
+  phone_number: string | null;
+  current_stars: number;
   created_at: string;
   updated_at: string;
 }

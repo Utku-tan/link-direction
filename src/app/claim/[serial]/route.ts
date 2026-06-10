@@ -58,40 +58,14 @@ export async function GET(
   else if (userAgent.includes('Safari')) browser = 'Safari'
   else if (userAgent.includes('Opera') || userAgent.includes('OPR')) browser = 'Opera'
 
-  // 5. İşletme hesabı ise cooldown kontrolü yap
+  // 5. İşletme hesabı ise doğrudan /star/[serial] sayfasına yönlendir
+  // Cooldown kontrolü, analytics ve yıldız kazanma işlemleri /api/loyalty/earn içinde yapılacak
   if (device.account_type === 'business') {
-    const cooldownHours = device.business_cooldown_hours || 12
-
-    const { data: isCooldownActive } = await supabase.rpc('check_cooldown', {
-      p_ip: ip,
-      p_device_id: device.device_id,
-      p_hours: cooldownHours,
-    })
-
-    if (isCooldownActive) {
-      // Cooldown aktif: Analytics'e blocked olarak yaz, puan VERME, ama yönlendir
-      supabase.from('analytics').insert({
-        link_id: device.link_id,
-        nfc_device_id: device.device_id,
-        device: deviceType,
-        browser,
-        referrer,
-        ip_address: ip,
-        is_cooldown_blocked: true,
-      }).then(() => {})
-
-      return Response.redirect(device.target_url, 302)
-    }
-
-    // İlk okutma: Puan ver + analytics yaz
-    supabase.rpc('increment_loyalty_point', {
-      p_ip: ip,
-      p_business_user_id: device.owner_id,
-      p_device_id: device.device_id,
-    }).then(() => {})
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://refly.world'
+    return Response.redirect(`${baseUrl}/star/${serial}`, 302)
   }
 
-  // 6. Analytics kaydı yaz (bireysel veya işletme ilk okutma)
+  // 6. Bireysel hesap: Analytics kaydı yaz
   supabase.from('analytics').insert({
     link_id: device.link_id,
     nfc_device_id: device.device_id,
@@ -105,7 +79,7 @@ export async function GET(
   // Click count artır
   supabase.rpc('increment_click_count', { link_uuid: device.link_id }).then(() => {})
 
-  // 7. 302 Redirect
+  // 7. Hedefe yönlendir
   return Response.redirect(device.target_url, 302)
 }
 
