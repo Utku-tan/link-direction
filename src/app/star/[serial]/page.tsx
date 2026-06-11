@@ -42,26 +42,28 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
         })
         
         const data = await res.json()
+        console.log('Earn response:', data)
         
         if (!res.ok) {
           throw new Error(data.error || 'Bir hata oluştu')
         }
 
+        const url = data.target_url || '/'
         setStars(data.stars)
-        setBusinessName(data.business_name)
-        setTargetUrl(data.target_url)
+        setBusinessName(data.business_name || 'İşletme')
+        setTargetUrl(url)
         setIsCooldown(data.is_cooldown)
 
+        // Cooldown aktifse yıldız sayfasını gösterme, doğrudan yönlendir
         if (data.is_cooldown) {
-          // Zaten yıldız almış, hemen yönlendir
-          window.location.href = data.target_url
+          window.location.href = url
           return
         }
 
         setLoading(false)
 
-        // 3. Otomatik yönlendirme (8 saniye sonra)
-        startRedirectTimer(data.target_url)
+        // Otomatik yönlendirme (15 saniye sonra)
+        startRedirectTimer(url)
 
       } catch (err: any) {
         setError(err.message)
