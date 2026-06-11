@@ -21,6 +21,7 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
   const [isRecovering, setIsRecovering] = useState(false)
   const [recoverPhone, setRecoverPhone] = useState('')
   const [recoverMessage, setRecoverMessage] = useState('')
+  const [backupError, setBackupError] = useState('')
 
   const redirectTimerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -80,7 +81,7 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
     clearRedirectTimer()
     redirectTimerRef.current = setTimeout(() => {
       window.location.href = url
-    }, 15000)
+    }, 8000)
   }
 
   const clearRedirectTimer = () => {
@@ -103,19 +104,24 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           visitor_uuid: visitorUuid,
-          business_id: serial, // Backend bunu çözecek (Not: Backend API backup için business_id istiyor. serial gönderiyoruz ama backend resolver istiyor. Hata!
+          serial: serial,
           phone_number: phone
         })
       })
 
       if (res.ok) {
         setBackupSuccess(true)
+        setBackupError('')
         setTimeout(() => {
           window.location.href = targetUrl
         }, 3000)
+      } else {
+        const data = await res.json()
+        setBackupError(data.error || 'Yedekleme başarısız.')
       }
     } catch (err) {
       console.error(err)
+      setBackupError('Bir hata oluştu.')
     }
   }
 
@@ -132,7 +138,7 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           new_visitor_uuid: visitorUuid,
-          business_id: serial, // Hata: Backend resolver gerektirir
+          serial: serial,
           phone_number: recoverPhone
         })
       })
@@ -232,6 +238,10 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
                 Yıldızlarımı Yedekle
               </button>
             </form>
+            
+            {backupError && (
+              <p className="mt-3 text-sm text-red-400 text-center">{backupError}</p>
+            )}
 
             <div className="mt-4 pt-4 border-t border-zinc-800 text-center">
               <button 
