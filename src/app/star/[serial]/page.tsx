@@ -78,7 +78,7 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
     clearRedirectTimer()
     redirectTimerRef.current = setTimeout(() => {
       window.location.href = url
-    }, 8000)
+    }, 15000)
   }
 
   const clearRedirectTimer = () => {
