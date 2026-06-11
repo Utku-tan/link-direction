@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       || 'unknown'
       
     // 3. Yıldız kazanma işlemi (Cooldown kontrolü içerir)
-    const cooldownHours = device.business_cooldown_hours || 12
+    const cooldownHours = device.business_cooldown_hours ?? 12
     const { data: earnData, error: earnError } = await supabase.rpc('earn_star', {
       p_business_id: device.owner_id,
       p_visitor_uuid: visitor_uuid,
