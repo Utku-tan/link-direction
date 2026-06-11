@@ -19,6 +19,7 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
   const [phone, setPhone] = useState('')
   const [backupSuccess, setBackupSuccess] = useState(false)
   const [isRecovering, setIsRecovering] = useState(false)
+  const [isAlreadyBackedUp, setIsAlreadyBackedUp] = useState(false)
   const [recoverPhone, setRecoverPhone] = useState('')
   const [recoverMessage, setRecoverMessage] = useState('')
   const [backupError, setBackupError] = useState('')
@@ -54,6 +55,7 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
         setBusinessName(data.business_name || 'İşletme')
         setTargetUrl(url)
         setIsCooldown(data.is_cooldown)
+        setIsAlreadyBackedUp(data.is_backed_up)
 
         // Cooldown aktifse yıldız sayfasını gösterme, doğrudan yönlendir
         if (data.is_cooldown) {
@@ -210,7 +212,7 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
           />
         </div>
 
-        {!backupSuccess && !isRecovering && (
+        {!backupSuccess && !isRecovering && !isAlreadyBackedUp && (
           <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 text-left transform transition-all">
             <div className="flex items-start gap-3 mb-4">
               <AlertCircle className="w-6 h-6 text-yellow-500 shrink-0 mt-1" />
@@ -254,6 +256,14 @@ export default function StarPage({ params }: { params: Promise<{ serial: string 
                 Zaten bir kartım var, telefon numaramla giriş yap
               </button>
             </div>
+          </div>
+        )}
+
+        {isAlreadyBackedUp && !isRecovering && (
+          <div className="bg-emerald-950/30 border border-emerald-900/50 rounded-2xl p-6 text-center">
+            <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
+            <h3 className="text-emerald-400 font-medium text-lg mb-1">Yıldızlarınız Güvende</h3>
+            <p className="text-zinc-400 text-sm">Telefon numaranız ile buluta yedeklenmiştir.</p>
           </div>
         )}
 

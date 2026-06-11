@@ -83,6 +83,7 @@ export async function POST(request: NextRequest) {
       success: result.success,
       stars: result.stars,
       is_cooldown: result.is_cooldown,
+      is_backed_up: result.is_backed_up,
       business_name: device.business_name || 'İşletme',
       target_url: device.target_url
     })
