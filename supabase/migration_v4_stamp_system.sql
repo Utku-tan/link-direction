@@ -30,7 +30,13 @@ ALTER TABLE public.profiles
 -- 4. NFC Devices tablosunu yeniden yapılandır
 DELETE FROM public.nfc_devices;
 
--- Eski sütunları kaldır
+-- Önce bağımlı RLS politikalarını kaldır (sütunlardan ÖNCE!)
+DROP POLICY IF EXISTS "Users can view own devices" ON public.nfc_devices;
+DROP POLICY IF EXISTS "Public can view device by serial" ON public.nfc_devices;
+DROP POLICY IF EXISTS "Users can update own devices" ON public.nfc_devices;
+DROP POLICY IF EXISTS "Anyone can claim unclaimed device" ON public.nfc_devices;
+
+-- Sonra eski sütunları kaldır
 ALTER TABLE public.nfc_devices DROP COLUMN IF EXISTS link_id;
 ALTER TABLE public.nfc_devices DROP COLUMN IF EXISTS is_claimed;
 ALTER TABLE public.nfc_devices DROP COLUMN IF EXISTS claimed_at;
