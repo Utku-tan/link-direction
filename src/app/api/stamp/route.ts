@@ -36,32 +36,48 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 3. Damga işlemi
-    const { data: stampData, error: stampError } = await supabase.rpc('process_stamp', {
+    // 3. Bekleyen İşlem Yarat (Yıldız hemen verilmez)
+    // Fiziksel redeem_tag artık geçersiz, reddet.
+    if (device.tag_type === 'redeem_tag') {
+      return NextResponse.json({ error: 'Ödül almak için cüzdanınızdan dijital kod üretin.' }, { status: 400 })
+    }
+
+    const { data: transactionId, error: txError } = await supabase.rpc('create_pending_transaction', {
       p_business_id: device.business_id,
       p_visitor_uuid: visitor_uuid,
       p_tag_type: device.tag_type,
-      p_device_id: device.device_id,
       p_fingerprint: fingerprint || null,
-      p_target_stars: device.target_stars_for_reward,
+      p_visitor_name: 'Müşteri', // İdealde loyalty_stars'dan okunabilir, şimdilik böyle
     })
 
-    if (stampError) {
-      console.error('Process stamp error:', stampError)
-      return NextResponse.json({ error: 'Damga işlemi başarısız' }, { status: 500 })
+    if (txError) {
+      console.error('Create pending tx error:', txError)
+      return NextResponse.json({ error: 'İşlem başlatılamadı' }, { status: 500 })
     }
 
-    const result = stampData[0]
+    if (!transactionId) {
+      // Çift okutma (spam) koruması
+      return NextResponse.json({
+        is_duplicate: true,
+        target_url: device.target_url || '/',
+      })
+    }
+
+    // Müşterinin o anki yıldız sayısını bulalım ki arayüzde doğru gösterelim
+    const { data: starsData } = await supabase
+      .from('loyalty_stars')
+      .select('current_stars')
+      .eq('business_id', device.business_id)
+      .eq('visitor_uuid', visitor_uuid)
+      .single()
+
+    const currentStars = starsData?.current_stars || 0
 
     const response = NextResponse.json({
-      success: result.success,
-      stars: result.stars_after,
-      stars_added: result.stars_added,
-      is_reward: result.is_reward,
-      is_duplicate: result.is_duplicate,
-      total_rewards: result.total_rewards,
-      is_backed_up: result.is_backed_up,
-      visitor_name: result.visitor_name,
+      success: true,
+      status: 'pending',
+      transaction_id: transactionId,
+      current_stars: currentStars,
       tag_type: device.tag_type,
       business_name: device.business_name || 'İşletme',
       target_url: device.target_url || '/',
