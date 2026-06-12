@@ -7,7 +7,7 @@
 DROP TABLE IF EXISTS public.stamp_events;
 DROP TABLE IF EXISTS public.loyalty_stars;
 DROP TABLE IF EXISTS public.loyalty_points;
-DROP TYPE IF EXISTS public.tag_type_enum;
+DROP TYPE IF EXISTS public.tag_type_enum CASCADE;
 
 -- Eski fonksiyonları temizle
 DROP FUNCTION IF EXISTS public.earn_star(UUID, TEXT, TEXT, INTEGER, UUID);
