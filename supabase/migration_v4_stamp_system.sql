@@ -114,10 +114,17 @@ CREATE POLICY "System insert events" ON public.stamp_events
   FOR INSERT WITH CHECK (true);
 
 -- 7. RLS güncellemeleri: nfc_devices
+-- Eski politikaları temizle
 DROP POLICY IF EXISTS "Users can view own devices" ON public.nfc_devices;
 DROP POLICY IF EXISTS "Public can view device by serial" ON public.nfc_devices;
 DROP POLICY IF EXISTS "Users can update own devices" ON public.nfc_devices;
 DROP POLICY IF EXISTS "Anyone can claim unclaimed device" ON public.nfc_devices;
+
+-- Tekrar çalıştırmalarda hata vermemesi için yeni politikaları da önce temizle
+DROP POLICY IF EXISTS "Anyone can view devices" ON public.nfc_devices;
+DROP POLICY IF EXISTS "Only admin can insert devices" ON public.nfc_devices;
+DROP POLICY IF EXISTS "Only admin can update devices" ON public.nfc_devices;
+DROP POLICY IF EXISTS "Only admin can delete devices" ON public.nfc_devices;
 
 CREATE POLICY "Anyone can view devices" ON public.nfc_devices
   FOR SELECT USING (true);
