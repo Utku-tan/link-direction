@@ -224,11 +224,13 @@ BEGIN
   ON CONFLICT (business_id, visitor_uuid)
   DO UPDATE SET device_fingerprint = COALESCE(p_fingerprint, loyalty_stars.device_fingerprint);
 
-  -- Mevcut bilgileri al
+  -- Mevcut bilgileri kilitli olarak al (Race condition / Atomicity koruması)
+  -- FOR UPDATE sayesinde aynı anda gelen 2 istek birbirini bekler, eksi bakiyeye düşmeyi engeller.
   SELECT ls.current_stars, ls.total_claimed_rewards, ls.username, (ls.phone_number IS NOT NULL)
   INTO v_current_stars, v_total_rewards, v_visitor_name, v_is_backed_up
   FROM public.loyalty_stars ls
-  WHERE ls.business_id = p_business_id AND ls.visitor_uuid = p_visitor_uuid;
+  WHERE ls.business_id = p_business_id AND ls.visitor_uuid = p_visitor_uuid
+  FOR UPDATE;
 
   -- ÖDÜL HARCAMA (redeem_tag)
   IF p_tag_type = 'redeem_tag' THEN

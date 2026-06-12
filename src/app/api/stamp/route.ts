@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     const result = stampData[0]
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: result.success,
       stars: result.stars_after,
       stars_added: result.stars_added,
@@ -67,6 +67,14 @@ export async function POST(request: NextRequest) {
       target_url: device.target_url || '/',
       target_stars: device.target_stars_for_reward,
     })
+
+    // Müşterinin tarayıcısının bu isteği önbelleğe almasını ve sayfa yenilendiğinde
+    // tekrar göndermesini (form resubmission) kesin olarak engeller.
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+
+    return response
   } catch (err) {
     console.error('Stamp API error:', err)
     return NextResponse.json({ error: 'Sunucu hatası' }, { status: 500 })
