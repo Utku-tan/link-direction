@@ -12,12 +12,12 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient()
 
-    const { data: resolveData, error: resolveError } = await supabase.rpc('resolve_nfc_redirect', { p_serial: serial })
+    const { data: resolveData, error: resolveError } = await supabase.rpc('resolve_stamp_device', { p_serial: serial })
     if (resolveError || !resolveData || resolveData.length === 0) {
       return NextResponse.json({ error: 'Cihaz bulunamadı' }, { status: 404 })
     }
 
-    const business_id = resolveData[0].owner_id
+    const business_id = resolveData[0].business_id
 
     const { data: recoverData, error } = await supabase.rpc('recover_by_phone', {
       p_phone: phone_number,

@@ -1,6 +1,7 @@
 export type UserRole = 'user' | 'admin';
 export type AccountType = 'individual' | 'business';
 export type DeviceType = 'mobile' | 'desktop' | 'tablet';
+export type TagType = 'point_1' | 'point_2' | 'point_3' | 'point_4' | 'point_5' | 'redeem_tag';
 
 export interface Profile {
   id: string;
@@ -13,6 +14,7 @@ export interface Profile {
   account_type: AccountType;
   business_name: string | null;
   business_cooldown_hours: number;
+  target_stars_for_reward: number;
   max_link_limit: number;
   created_at: string;
   updated_at: string;
@@ -32,14 +34,38 @@ export interface Link {
 export interface NfcDevice {
   id: string;
   device_serial: string;
-  user_id: string | null;
-  link_id: string | null;
-  device_label: string | null;
-  is_claimed: boolean;
-  claimed_at: string | null;
+  business_id: string | null;
+  tag_type: TagType;
+  target_url: string | null;
   created_at: string;
   // Joined fields
-  link?: Link;
+  business?: Profile;
+}
+
+export interface StampEvent {
+  id: string;
+  business_id: string;
+  visitor_uuid: string;
+  visitor_name: string | null;
+  tag_type: TagType;
+  stars_added: number;
+  current_stars: number;
+  target_stars: number;
+  is_reward: boolean;
+  created_at: string;
+}
+
+export interface LoyaltyStar {
+  id: string;
+  business_id: string;
+  visitor_uuid: string;
+  username: string | null;
+  phone_number: string | null;
+  current_stars: number;
+  total_claimed_rewards: number;
+  device_fingerprint: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface AnalyticsEvent {
@@ -54,16 +80,6 @@ export interface AnalyticsEvent {
   ip_address: string | null;
   nfc_device_id: string | null;
   is_cooldown_blocked: boolean;
-}
-
-export interface LoyaltyStar {
-  id: string;
-  business_id: string;
-  visitor_uuid: string;
-  phone_number: string | null;
-  current_stars: number;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface CreateLinkInput {

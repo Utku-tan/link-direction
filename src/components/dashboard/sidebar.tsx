@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut, Wifi } from 'lucide-react'
+import { LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut, Wifi, Radio, Stamp } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Logo } from '@/components/logo'
@@ -15,10 +15,16 @@ const navItems = [
   { href: '/dashboard/analytics', label: 'İstatistikler', icon: BarChart3 },
 ]
 
+const businessItems = [
+  { href: '/dashboard/live-feed', label: 'Canlı Akış', icon: Radio },
+  { href: '/dashboard/devices', label: 'Kasa Damgalarım', icon: Stamp },
+]
+
 const adminItems = [
   { href: '/admin', label: 'Yönetim Özeti', icon: Shield },
   { href: '/admin/users', label: 'Kullanıcılar', icon: Users },
   { href: '/admin/links', label: 'Tüm Linkler', icon: LinkIcon },
+  { href: '/admin/devices', label: 'NFC Cihazlar', icon: Wifi },
 ]
 
 export function DashboardSidebar({ profile }: { profile: Profile }) {
@@ -62,29 +68,33 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
           )
         })}
 
-        {/* NFC Devices - dynamic label */}
-        {(() => {
-          const devicesItem = {
-            href: '/dashboard/devices',
-            label: profile.account_type === 'business' ? 'Masalarım / Stantlarım' : 'Cihazlarım',
-            icon: Wifi,
-          }
-          const isActive = pathname === devicesItem.href
-          return (
-            <Link
-              href={devicesItem.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
-                isActive
-                  ? 'bg-[#00f2fe]/10 text-[#00f2fe] accent-border-glow'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-              )}
-            >
-              <devicesItem.icon className="w-5 h-5" />
-              {devicesItem.label}
-            </Link>
-          )
-        })()}
+        {/* İşletme hesabı menü öğeleri */}
+        {profile.account_type === 'business' && (
+          <>
+            <div className="my-4 border-t border-zinc-800" />
+            <p className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              İşletme
+            </p>
+            {businessItems.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                    isActive
+                      ? 'bg-amber-500/10 text-amber-400'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                  )}
+                >
+                  <item.icon className="w-5 h-5" />
+                  {item.label}
+                </Link>
+              )
+            })}
+          </>
+        )}
 
         {profile.role === 'admin' && (
           <>

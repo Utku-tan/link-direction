@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { visitor_uuid, serial, phone_number } = body
+    const { visitor_uuid, serial, phone_number, username } = body
 
     if (!visitor_uuid || !serial || !phone_number) {
       return NextResponse.json({ error: 'Eksik parametre' }, { status: 400 })
@@ -12,28 +12,33 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient()
 
-    const { data: resolveData, error: resolveError } = await supabase.rpc('resolve_nfc_redirect', { p_serial: serial })
+    // Cihaz bilgisinden business_id'yi al
+    const { data: resolveData, error: resolveError } = await supabase.rpc('resolve_stamp_device', {
+      p_serial: serial,
+    })
+
     if (resolveError || !resolveData || resolveData.length === 0) {
       return NextResponse.json({ error: 'Cihaz bulunamadı' }, { status: 404 })
     }
 
-    const business_id = resolveData[0].owner_id
+    const device = resolveData[0]
 
-    const { data: success, error } = await supabase.rpc('backup_phone', {
+    // Yedekleme
+    const { data, error } = await supabase.rpc('backup_visitor', {
       p_visitor_uuid: visitor_uuid,
-      p_business_id: business_id,
-      p_phone: phone_number
+      p_business_id: device.business_id,
+      p_phone: phone_number,
+      p_username: username || null,
     })
 
     if (error) {
-      console.error('Backup phone error:', error)
+      console.error('Backup error:', error)
       return NextResponse.json({ error: 'Yedekleme başarısız' }, { status: 500 })
     }
 
-    return NextResponse.json({ success })
-
+    return NextResponse.json({ success: data })
   } catch (err) {
-    console.error('Loyalty backup API error:', err)
+    console.error('Backup API error:', err)
     return NextResponse.json({ error: 'Sunucu hatası' }, { status: 500 })
   }
 }
