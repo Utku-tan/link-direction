@@ -189,7 +189,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
       const res = await fetch('/api/loyalty/backup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ visitor_uuid: visitorUuid, phone, username })
+        body: JSON.stringify({ visitor_uuid: visitorUuid, phone_number: phone, username, serial })
       })
       const data = await res.json()
       if (res.ok && data.success) {
@@ -215,7 +215,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
       const res = await fetch('/api/loyalty/recover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: recoverPhone, new_visitor_uuid: visitorUuid, fingerprint })
+        body: JSON.stringify({ phone_number: recoverPhone, new_visitor_uuid: visitorUuid, serial })
       })
       const data = await res.json()
       if (res.ok && data.success) {
