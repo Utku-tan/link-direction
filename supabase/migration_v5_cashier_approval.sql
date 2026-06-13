@@ -208,8 +208,8 @@ BEGIN
 
   -- Zaten aktif bir kod var mı?
   SELECT id INTO v_existing_code_id
-  FROM public.redeem_codes
-  WHERE business_id = p_business_id AND visitor_uuid = p_visitor_uuid AND status = 'active' AND expires_at > now();
+  FROM public.redeem_codes rc
+  WHERE rc.business_id = p_business_id AND rc.visitor_uuid = p_visitor_uuid AND rc.status = 'active' AND rc.expires_at > now();
 
   IF v_existing_code_id IS NOT NULL THEN
     RETURN QUERY SELECT false, NULL::TEXT, NULL::TIMESTAMPTZ, 'Zaten aktif bir kodunuz var'::TEXT;
@@ -245,8 +245,8 @@ DECLARE
 BEGIN
   -- Süresi geçmemiş aktif kodu bul ve kilitle
   SELECT * INTO v_code_row
-  FROM public.redeem_codes
-  WHERE business_id = p_business_id AND code = p_code AND status = 'active' AND expires_at > now()
+  FROM public.redeem_codes rc
+  WHERE rc.business_id = p_business_id AND rc.code = p_code AND rc.status = 'active' AND rc.expires_at > now()
   FOR UPDATE;
 
   IF NOT FOUND THEN
