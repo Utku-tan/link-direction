@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Radio, Star, Coffee, Volume2, VolumeX, Loader2, CheckCircle2, XCircle, Search } from 'lucide-react'
+import { Radio, Star, Coffee, Volume2, VolumeX, Loader2, CheckCircle2, XCircle, Search, AlertCircle } from 'lucide-react'
 import { formatDateTime } from '@/lib/utils'
 
 interface StampEvent {
