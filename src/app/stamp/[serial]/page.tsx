@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef, use } from 'react'
-import { Phone, CheckCircle2, AlertCircle, Loader2, Star, ShieldCheck, XCircle } from 'lucide-react'
+import { Phone, CheckCircle2, AlertCircle, Loader2, Star, ShieldCheck, XCircle, Key } from 'lucide-react'
 import { generateFingerprint } from '@/lib/fingerprint'
 import { createClient } from '@/lib/supabase/client'
 
@@ -37,10 +37,12 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
   const [isBackedUp, setIsBackedUp] = useState(true)
   const [phone, setPhone] = useState('')
   const [username, setUsername] = useState('')
+  const [pinCode, setPinCode] = useState('')
   const [backupSuccess, setBackupSuccess] = useState(false)
   const [backupError, setBackupError] = useState('')
   const [isRecovering, setIsRecovering] = useState(false)
   const [recoverPhone, setRecoverPhone] = useState('')
+  const [recoverPinCode, setRecoverPinCode] = useState('')
   const [recoverMessage, setRecoverMessage] = useState('')
 
   const redirectTimerRef = useRef<NodeJS.Timeout | null>(null)
@@ -179,8 +181,8 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
 
   const handleBackup = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!phone) {
-      setBackupError('Lütfen telefon numaranızı girin.')
+    if (!phone || pinCode.length !== 6) {
+      setBackupError('Lütfen numaranızı ve 6 haneli şifrenizi girin.')
       return
     }
 
@@ -189,7 +191,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
       const res = await fetch('/api/loyalty/backup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ visitor_uuid: visitorUuid, phone_number: phone, username, serial })
+        body: JSON.stringify({ visitor_uuid: visitorUuid, phone_number: phone, username, serial, pin_code: pinCode })
       })
       const data = await res.json()
       if (res.ok && data.success) {
@@ -205,8 +207,8 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
 
   const handleRecover = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!recoverPhone) {
-      setRecoverMessage('Telefon numarası gerekli.')
+    if (!recoverPhone || recoverPinCode.length !== 6) {
+      setRecoverMessage('Telefon numarası ve 6 haneli şifre gerekli.')
       return
     }
     const fingerprint = generateFingerprint()
@@ -215,7 +217,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
       const res = await fetch('/api/loyalty/recover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone_number: recoverPhone, new_visitor_uuid: visitorUuid, serial })
+        body: JSON.stringify({ phone_number: recoverPhone, new_visitor_uuid: visitorUuid, serial, pin_code: recoverPinCode })
       })
       const data = await res.json()
       if (res.ok && data.success) {
@@ -374,6 +376,19 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
                       onFocus={clearRedirectTimer}
                     />
                   </div>
+                  <div className="relative">
+                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                    <input
+                      type="password"
+                      inputMode="numeric"
+                      maxLength={6}
+                      placeholder="6 Haneli Güvenlik Şifresi"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe] transition-colors tracking-widest font-mono"
+                      value={pinCode}
+                      onChange={(e) => setPinCode(e.target.value.replace(/\D/g, ''))}
+                      onFocus={clearRedirectTimer}
+                    />
+                  </div>
                   <button
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-white font-medium py-3 rounded-xl hover:opacity-90 transition-opacity text-sm"
@@ -407,6 +422,18 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
                       className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe]"
                       value={recoverPhone}
                       onChange={(e) => setRecoverPhone(e.target.value)}
+                    />
+                  </div>
+                  <div className="relative">
+                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                    <input
+                      type="password"
+                      inputMode="numeric"
+                      maxLength={6}
+                      placeholder="6 Haneli Kurtarma Şifresi"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe] tracking-widest font-mono"
+                      value={recoverPinCode}
+                      onChange={(e) => setRecoverPinCode(e.target.value.replace(/\D/g, ''))}
                     />
                   </div>
                   <button type="submit" className="w-full bg-zinc-100 text-zinc-900 font-medium py-3 rounded-xl hover:bg-white transition-colors text-sm">

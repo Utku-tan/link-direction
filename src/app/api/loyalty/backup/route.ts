@@ -4,10 +4,14 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { visitor_uuid, serial, phone_number, username } = body
+    const { visitor_uuid, serial, phone_number, username, pin_code } = body
 
-    if (!visitor_uuid || !serial || !phone_number) {
+    if (!visitor_uuid || !serial || !phone_number || !pin_code) {
       return NextResponse.json({ error: 'Eksik parametre' }, { status: 400 })
+    }
+
+    if (pin_code.length !== 6 || !/^\d+$/.test(pin_code)) {
+      return NextResponse.json({ error: 'PIN kodu 6 haneli rakam olmalıdır' }, { status: 400 })
     }
 
     const supabase = createAdminClient()
@@ -29,6 +33,7 @@ export async function POST(request: NextRequest) {
       p_business_id: device.business_id,
       p_phone: phone_number,
       p_username: username || null,
+      p_pin_code: pin_code,
     })
 
     if (error) {
