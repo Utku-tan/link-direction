@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef, use } from 'react'
-import { Phone, CheckCircle2, AlertCircle, Loader2, Coffee, Star, ShieldCheck, XCircle } from 'lucide-react'
+import { Phone, CheckCircle2, AlertCircle, Loader2, Star, ShieldCheck, XCircle } from 'lucide-react'
 import { generateFingerprint } from '@/lib/fingerprint'
 import { createClient } from '@/lib/supabase/client'
 
@@ -20,7 +20,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Yeni V5 Durumları
+  // V5 Durumları
   const [isPending, setIsPending] = useState(false)
   const [isRejected, setIsRejected] = useState(false)
   const [transactionId, setTransactionId] = useState<string | null>(null)
@@ -33,6 +33,8 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
   const [tagType, setTagType] = useState('point_1')
   const [isDuplicate, setIsDuplicate] = useState(false)
 
+  // Yedekleme (Registration) State
+  const [isBackedUp, setIsBackedUp] = useState(true)
   const [phone, setPhone] = useState('')
   const [username, setUsername] = useState('')
   const [backupSuccess, setBackupSuccess] = useState(false)
@@ -44,8 +46,12 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
   const redirectTimerRef = useRef<NodeJS.Timeout | null>(null)
   const [countdown, setCountdown] = useState(8)
   const countdownRef = useRef<NodeJS.Timeout | null>(null)
+  const hasProcessedRef = useRef(false)
 
   useEffect(() => {
+    if (hasProcessedRef.current) return
+    hasProcessedRef.current = true
+
     let visitorUuid = localStorage.getItem('refly_visitor_uuid')
     if (!visitorUuid) {
       visitorUuid = crypto.randomUUID()
@@ -68,6 +74,11 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
           throw new Error(data.error || 'Bir hata oluştu')
         }
 
+        if (data.is_redirect) {
+          window.location.href = data.target_url || '/'
+          return
+        }
+
         if (data.is_duplicate) {
           setIsDuplicate(true)
           setLoading(false)
@@ -80,6 +91,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
         setBusinessName(data.business_name || 'İşletme')
         setTargetUrl(data.target_url || '/')
         setTagType(data.tag_type)
+        setIsBackedUp(data.is_backed_up)
         
         // requested stars from tag_type
         const requestedStars = parseInt(data.tag_type.split('_')[1] || '1')
@@ -165,14 +177,56 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
     }
   }
 
-  // Backup handlers omitted for brevity but keeping them functional
   const handleBackup = async (e: React.FormEvent) => {
     e.preventDefault()
-    // ...
+    if (!phone) {
+      setBackupError('Lütfen telefon numaranızı girin.')
+      return
+    }
+
+    const visitorUuid = localStorage.getItem('refly_visitor_uuid')
+    try {
+      const res = await fetch('/api/loyalty/backup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitor_uuid: visitorUuid, phone, username })
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setBackupSuccess(true)
+        setRecoverMessage(data.message || 'Yıldızlarınız başarıyla kaydedildi.')
+      } else {
+        setBackupError(data.error || 'Kayıt başarısız.')
+      }
+    } catch {
+      setBackupError('Bir hata oluştu.')
+    }
   }
+
   const handleRecover = async (e: React.FormEvent) => {
     e.preventDefault()
-    // ...
+    if (!recoverPhone) {
+      setRecoverMessage('Telefon numarası gerekli.')
+      return
+    }
+    const fingerprint = generateFingerprint()
+    const visitorUuid = localStorage.getItem('refly_visitor_uuid')
+    try {
+      const res = await fetch('/api/loyalty/recover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: recoverPhone, new_visitor_uuid: visitorUuid, fingerprint })
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setBackupSuccess(true)
+        setRecoverMessage('Yıldızlarınız başarıyla geri yüklendi!')
+      } else {
+        setRecoverMessage(data.error || 'Kurtarma başarısız.')
+      }
+    } catch {
+      setRecoverMessage('Bir hata oluştu.')
+    }
   }
 
   // Progress ring calculation
@@ -225,7 +279,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#00f2fe] rounded-full blur-[150px] opacity-15 pointer-events-none" />
       )}
 
-      <div className="z-10 w-full max-w-md text-center">
+      <div className="z-10 w-full max-w-md text-center space-y-6">
 
         {/* === BEKLEME EKRANI === */}
         {isPending && (
@@ -291,11 +345,95 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
               {stars >= targetStars && ' • 🎉 Ödül almaya hak kazandınız!'}
             </p>
 
-            <div className="mt-4 space-y-2">
+            {/* YEDEKLEME FORMU */}
+            {!backupSuccess && !isRecovering && !isBackedUp && (
+              <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 text-left mb-6">
+                <div className="flex items-start gap-3 mb-4">
+                  <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
+                  <p className="text-zinc-300 text-sm leading-relaxed">
+                    <strong className="text-white">Yıldızlarını güvenceye al!</strong> Telefonunu değiştirirsen yıldızların kaybolabilir. İsmini ve numaranı girerek buluta yedekle.
+                  </p>
+                </div>
+                <form onSubmit={handleBackup} className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder="İsminiz (Opsiyonel)"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-[#00f2fe] transition-colors"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    onFocus={clearRedirectTimer}
+                  />
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                    <input
+                      type="tel"
+                      placeholder="Telefon Numaranız (5XX...)"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe] transition-colors"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      onFocus={clearRedirectTimer}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-white font-medium py-3 rounded-xl hover:opacity-90 transition-opacity text-sm"
+                  >
+                    Yıldızlarımı Yedekle
+                  </button>
+                </form>
+                {backupError && <p className="mt-3 text-sm text-red-400 text-center">{backupError}</p>}
+                <div className="mt-4 pt-4 border-t border-zinc-800 text-center">
+                  <button
+                    onClick={() => { setIsRecovering(true); clearRedirectTimer() }}
+                    className="text-sm text-zinc-500 hover:text-white transition-colors"
+                  >
+                    Eski yıldızlarımı telefon numaram ile kurtar
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Kurtarma formu */}
+            {isRecovering && !backupSuccess && (
+              <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 text-left mb-6">
+                <h3 className="text-white font-medium mb-2">Eski Yıldızlarını Kurtar</h3>
+                <p className="text-zinc-400 text-sm mb-4">Daha önce kaydettiğiniz telefon numaranızı girin.</p>
+                <form onSubmit={handleRecover} className="space-y-3">
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                    <input
+                      type="tel"
+                      placeholder="Telefon Numaranız"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe]"
+                      value={recoverPhone}
+                      onChange={(e) => setRecoverPhone(e.target.value)}
+                    />
+                  </div>
+                  <button type="submit" className="w-full bg-zinc-100 text-zinc-900 font-medium py-3 rounded-xl hover:bg-white transition-colors text-sm">
+                    Yıldızları Geri Yükle
+                  </button>
+                </form>
+                {recoverMessage && <p className="mt-3 text-sm text-yellow-400 text-center">{recoverMessage}</p>}
+                <button onClick={() => setIsRecovering(false)} className="mt-4 w-full text-zinc-500 text-sm hover:text-zinc-300">Geri Dön</button>
+              </div>
+            )}
+
+            {/* Yedekleme başarılı */}
+            {backupSuccess && (
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 flex flex-col items-center mt-4 mb-6">
+                <CheckCircle2 className="w-12 h-12 text-emerald-500 mb-3" />
+                <h3 className="text-emerald-500 font-medium text-lg">Harika!</h3>
+                <p className="text-zinc-300 text-sm text-center">
+                  {recoverMessage || 'Yıldızlarınız güvenle buluta kaydedildi.'}
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-2">
               <a href={targetUrl} className="inline-flex items-center text-zinc-500 hover:text-white transition-colors text-sm">
                 Menüye Devam Et →
               </a>
-              {countdown > 0 && (
+              {countdown > 0 && !backupSuccess && !isRecovering && isBackedUp && (
                 <p className="text-zinc-700 text-xs">{countdown} saniye sonra otomatik yönlendirileceksiniz</p>
               )}
             </div>

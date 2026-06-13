@@ -36,10 +36,12 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 3. Bekleyen İşlem Yarat (Yıldız hemen verilmez)
-    // Fiziksel redeem_tag artık geçersiz, reddet.
+    // Fiziksel redeem_tag okutulursa müşteriyi cüzdanına yönlendir.
     if (device.tag_type === 'redeem_tag') {
-      return NextResponse.json({ error: 'Ödül almak için cüzdanınızdan dijital kod üretin.' }, { status: 400 })
+      return NextResponse.json({ 
+        is_redirect: true, 
+        target_url: '/wallet' 
+      })
     }
 
     const { data: transactionId, error: txError } = await supabase.rpc('create_pending_transaction', {
@@ -66,18 +68,20 @@ export async function POST(request: NextRequest) {
     // Müşterinin o anki yıldız sayısını bulalım ki arayüzde doğru gösterelim
     const { data: starsData } = await supabase
       .from('loyalty_stars')
-      .select('current_stars')
+      .select('current_stars, phone')
       .eq('business_id', device.business_id)
       .eq('visitor_uuid', visitor_uuid)
       .single()
 
     const currentStars = starsData?.current_stars || 0
+    const isBackedUp = !!starsData?.phone
 
     const response = NextResponse.json({
       success: true,
       status: 'pending',
       transaction_id: transactionId,
       current_stars: currentStars,
+      is_backed_up: isBackedUp,
       tag_type: device.tag_type,
       business_name: device.business_name || 'İşletme',
       target_url: device.target_url || '/',
