@@ -21,6 +21,7 @@ export default function WalletPage() {
 
   // Redeem state
   const [activeCode, setActiveCode] = useState<string | null>(null)
+  const [activeBusinessId, setActiveBusinessId] = useState<string | null>(null)
   const [codeCountdown, setCodeCountdown] = useState<number>(0)
   const [generatingFor, setGeneratingFor] = useState<string | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -63,6 +64,7 @@ export default function WalletPage() {
             const codeRow = payload.new
             if (codeRow.status === 'used') {
               setActiveCode(null)
+              setActiveBusinessId(null)
               setCodeCountdown(0)
               if (timerRef.current) clearInterval(timerRef.current)
               // Refresh wallet
@@ -93,6 +95,7 @@ export default function WalletPage() {
 
       if (data.success) {
         setActiveCode(data.code)
+        setActiveBusinessId(businessId)
         
         // Calculate diff in seconds
         const expiresAt = new Date(data.expires_at).getTime()
@@ -107,6 +110,7 @@ export default function WalletPage() {
             if (prev <= 1) {
               clearInterval(timerRef.current!)
               setActiveCode(null)
+              setActiveBusinessId(null)
               return 0
             }
             return prev - 1
@@ -195,7 +199,7 @@ export default function WalletPage() {
                     </div>
 
                     {/* Action Area */}
-                    {activeCode && generatingFor === card.business_id ? (
+                    {activeCode && activeBusinessId === card.business_id ? (
                       <div className="text-center w-full sm:w-auto bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4">
                         <p className="text-amber-400 font-mono text-3xl tracking-[0.2em] font-bold mb-1">{activeCode}</p>
                         <p className="text-zinc-400 text-xs">Kasiyere bu kodu gösterin ({codeCountdown}sn)</p>
