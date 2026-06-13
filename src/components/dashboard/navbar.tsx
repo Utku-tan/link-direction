@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Menu, X, LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut, Wifi, Radio, Stamp } from 'lucide-react'
+import { Menu, X, LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut, Wifi, Radio, Stamp, Settings } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import type { Profile } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -18,6 +18,7 @@ const navItems = [
 const businessItems = [
   { href: '/dashboard/live-feed', label: 'Canlı Akış', icon: Radio },
   { href: '/dashboard/devices', label: 'Kasa Damgalarım', icon: Stamp },
+  { href: '/dashboard/settings', label: 'Ayarlar', icon: Settings },
 ]
 
 const adminItems = [

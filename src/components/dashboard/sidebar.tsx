@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut, Wifi, Radio, Stamp } from 'lucide-react'
+import { LayoutDashboard, LinkIcon, BarChart3, Shield, Users, LogOut, Wifi, Radio, Stamp, Settings } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Logo } from '@/components/logo'
@@ -18,6 +18,7 @@ const navItems = [
 const businessItems = [
   { href: '/dashboard/live-feed', label: 'Canlı Akış', icon: Radio },
   { href: '/dashboard/devices', label: 'Kasa Damgalarım', icon: Stamp },
+  { href: '/dashboard/settings', label: 'Ayarlar', icon: Settings },
 ]
 
 const adminItems = [
