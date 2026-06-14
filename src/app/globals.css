@@ -16,6 +16,15 @@
   --color-input: #27272a;
   --color-ring: #00f2fe;
 
+  /* ── Animations ── */
+  --animate-shimmer: shimmer 1.5s infinite;
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
   /* ── Shadcn Semantic Tokens ── */
   --color-primary: #f4f4f5;
   --color-primary-foreground: #09090b;

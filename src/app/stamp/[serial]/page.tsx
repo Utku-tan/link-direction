@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, use } from 'react'
 import { Phone, CheckCircle2, AlertCircle, Loader2, Star, ShieldCheck, XCircle, Key } from 'lucide-react'
 import { generateFingerprint } from '@/lib/fingerprint'
 import { createClient } from '@/lib/supabase/client'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const TAG_LABELS: Record<string, string> = {
   point_1: '+1 Yıldız',
@@ -40,10 +41,13 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
   const [pinCode, setPinCode] = useState('')
   const [backupSuccess, setBackupSuccess] = useState(false)
   const [backupError, setBackupError] = useState('')
+  
   const [isRecovering, setIsRecovering] = useState(false)
   const [recoverPhone, setRecoverPhone] = useState('')
   const [recoverPinCode, setRecoverPinCode] = useState('')
   const [recoverMessage, setRecoverMessage] = useState('')
+
+  const [showBackupCard, setShowBackupCard] = useState(false)
 
   const redirectTimerRef = useRef<NodeJS.Timeout | null>(null)
   const [countdown, setCountdown] = useState(8)
@@ -102,6 +106,9 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
         if (data.status === 'pending') {
           setTransactionId(data.transaction_id)
           setIsPending(true)
+        } else {
+          // Doğrudan başarılı onay
+          setTimeout(() => setShowBackupCard(true), 2500)
         }
         
         setLoading(false)
@@ -138,6 +145,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
             setIsPending(false)
             setStars(prev => prev + starsAdded)
             startRedirectTimer(targetUrl)
+            setTimeout(() => setShowBackupCard(true), 2500)
           } else if (newStatus === 'rejected') {
             setIsPending(false)
             setIsRejected(true)
@@ -240,7 +248,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
+      <div className="min-h-screen flex items-center justify-center bg-[#030712]">
         <Loader2 className="w-12 h-12 text-[#00f2fe] animate-spin" />
       </div>
     )
@@ -248,12 +256,12 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#030712] p-4">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h1 className="text-xl font-bold text-white mb-2">Hata Oluştu</h1>
           <p className="text-zinc-400 mb-6">{error}</p>
-          <a href="/" className="px-6 py-2 bg-zinc-800 text-white rounded-lg">Ana Sayfa</a>
+          <a href="/" className="px-6 py-2 bg-zinc-900/50 border border-white/10 text-white rounded-xl backdrop-blur-xl transition hover:bg-zinc-800">Ana Sayfa</a>
         </div>
       </div>
     )
@@ -261,7 +269,7 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
 
   if (isDuplicate) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#030712] p-4 text-center">
          <div>
           <Loader2 className="w-12 h-12 text-[#00f2fe] animate-spin mx-auto mb-4" />
           <p className="text-zinc-400">İşlem zaten devam ediyor, yönlendiriliyorsunuz...</p>
@@ -271,201 +279,296 @@ export default function StampPage({ params }: { params: Promise<{ serial: string
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-950 p-4 relative overflow-hidden">
-      {/* Background effects */}
-      {isPending ? (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-500 rounded-full blur-[150px] opacity-10 pointer-events-none animate-pulse" />
-      ) : isRejected ? (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-500 rounded-full blur-[150px] opacity-10 pointer-events-none" />
-      ) : (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#00f2fe] rounded-full blur-[150px] opacity-15 pointer-events-none" />
-      )}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#030712] p-4 relative overflow-hidden font-sans">
+      {/* Background glow effects */}
+      <AnimatePresence>
+        {isPending && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 0.15, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.2 }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#00f2fe] rounded-full blur-[150px] pointer-events-none"
+          />
+        )}
+        {isRejected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-500 rounded-full blur-[150px] pointer-events-none"
+          />
+        )}
+        {!isPending && !isRejected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] bg-gradient-to-r from-[#00f2fe] to-[#4facfe] rounded-full blur-[150px] pointer-events-none"
+          />
+        )}
+      </AnimatePresence>
 
       <div className="z-10 w-full max-w-md text-center space-y-6">
-
-        {/* === BEKLEME EKRANI === */}
-        {isPending && (
-          <div className="animate-in fade-in duration-700 flex flex-col items-center">
-            <div className="relative mb-8">
-              <div className="w-32 h-32 rounded-full border-4 border-zinc-800 flex items-center justify-center">
-                <ShieldCheck className="w-12 h-12 text-yellow-500 animate-pulse" />
+        <AnimatePresence mode="wait">
+          {/* === BEKLEME EKRANI === */}
+          {isPending && (
+            <motion.div
+              key="pending"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
+              transition={{ duration: 0.4 }}
+              className="flex flex-col items-center"
+            >
+              <div className="relative mb-10">
+                <motion.div 
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                  className="w-32 h-32 rounded-full border border-white/10 bg-zinc-900/30 backdrop-blur-xl flex items-center justify-center shadow-[0_0_40px_rgba(0,242,254,0.1)]"
+                >
+                  <ShieldCheck className="w-12 h-12 text-[#00f2fe]" />
+                </motion.div>
+                <div className="absolute inset-0 rounded-full border-t-2 border-[#00f2fe] animate-spin" style={{ animationDuration: '3s' }} />
+                <div className="absolute inset-0 rounded-full border-l-2 border-[#4facfe] animate-spin" style={{ animationDuration: '2s', animationDirection: 'reverse' }} />
               </div>
-              <div className="absolute inset-0 rounded-full border-t-4 border-yellow-500 animate-spin" />
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Kasiyer Onayı Bekleniyor...</h1>
-            <p className="text-zinc-400 text-sm mb-6">
-              Lütfen ekranınızı kapatmayın. Kasiyer işlemi onayladığında yıldızınız yüklenecektir.
-            </p>
-          </div>
-        )}
+              <h1 className="text-2xl font-bold text-white tracking-tight mb-2">Kasiyer Onayı Bekleniyor</h1>
+              <p className="text-zinc-500 text-sm mb-6 max-w-[240px] leading-relaxed">
+                Lütfen ekranınızı kapatmayın. Kasiyer onayladığında yıldızınız yüklenecektir.
+              </p>
+            </motion.div>
+          )}
 
-        {/* === REDDEDİLME EKRANI === */}
-        {isRejected && (
-          <div className="animate-in fade-in duration-700 flex flex-col items-center">
-             <div className="mb-6">
-               <XCircle className="w-24 h-24 text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
-             </div>
-             <h1 className="text-2xl font-bold text-white mb-2">İşlem Reddedildi</h1>
-             <p className="text-zinc-400 text-sm mb-6">Kasiyer bu yıldız talebini onaylamadı.</p>
-             <a href={targetUrl} className="px-6 py-2 bg-zinc-800 text-white rounded-lg">Menüye Dön</a>
-          </div>
-        )}
-
-        {/* === ONAY VE KAZANMA EKRANI === */}
-        {!isPending && !isRejected && !error && (
-          <div className="animate-in fade-in zoom-in duration-700">
-            {/* Progress Ring */}
-            <div className="relative inline-block mb-8">
-              <svg width="200" height="200" viewBox="0 0 200 200" className="transform -rotate-90">
-                <circle cx="100" cy="100" r={radius} fill="none" stroke="#27272a" strokeWidth="8" />
-                <circle
-                  cx="100" cy="100" r={radius} fill="none"
-                  stroke="url(#progressGradient2)" strokeWidth="8" strokeLinecap="round"
-                  strokeDasharray={circumference} strokeDashoffset={strokeDashoffset}
-                  className="transition-all duration-1500 ease-out"
-                />
-                <defs>
-                  <linearGradient id="progressGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#00f2fe" />
-                    <stop offset="100%" stopColor="#4facfe" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <Star className="w-10 h-10 text-yellow-400 fill-yellow-400 mb-1 drop-shadow-[0_0_12px_rgba(250,204,21,0.5)]" />
-                <span className="text-3xl font-bold text-white">{stars}</span>
-                <span className="text-xs text-zinc-500">/ {targetStars} Yıldız</span>
-              </div>
-            </div>
-
-            <h1 className="text-3xl font-bold text-white mb-2">Tebrikler! 🌟</h1>
-            <p className="text-[#00f2fe] font-semibold text-xl mb-2">
-              Kasiyer Onayladı: {TAG_LABELS[tagType] || `+${starsAdded} Yıldız`} Kazandınız!
-            </p>
-            <p className="text-zinc-400 text-sm mb-8">
-              {businessName} • {stars}/{targetStars} Yıldız
-              {stars >= targetStars && ' • 🎉 Ödül almaya hak kazandınız!'}
-            </p>
-
-            {/* YEDEKLEME FORMU */}
-            {!backupSuccess && !isRecovering && !isBackedUp && (
-              <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 text-left mb-6">
-                <div className="flex items-start gap-3 mb-4">
-                  <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                  <p className="text-zinc-300 text-sm leading-relaxed">
-                    <strong className="text-white">Yıldızlarını güvenceye al!</strong> Telefonunu değiştirirsen yıldızların kaybolabilir. İsmini ve numaranı girerek buluta yedekle.
-                  </p>
+          {/* === REDDEDİLME EKRANI === */}
+          {isRejected && (
+            <motion.div
+              key="rejected"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex flex-col items-center"
+            >
+              <div className="mb-8">
+                <div className="w-24 h-24 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-[0_0_40px_rgba(239,68,68,0.2)]">
+                  <XCircle className="w-12 h-12 text-red-500" />
                 </div>
-                <form onSubmit={handleBackup} className="space-y-3">
-                  <input
-                    type="text"
-                    placeholder="İsminiz (Opsiyonel)"
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-[#00f2fe] transition-colors"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    onFocus={clearRedirectTimer}
+              </div>
+              <h1 className="text-2xl font-bold text-white tracking-tight mb-2">İşlem Reddedildi</h1>
+              <p className="text-zinc-500 text-sm mb-8">Kasiyer bu yıldız talebini onaylamadı.</p>
+              <a href={targetUrl} className="px-8 py-3 bg-zinc-900/50 backdrop-blur-md border border-white/10 text-white font-medium rounded-xl hover:bg-zinc-800 transition">Menüye Dön</a>
+            </motion.div>
+          )}
+
+          {/* === ONAY VE KAZANMA EKRANI === */}
+          {!isPending && !isRejected && !error && (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            >
+              {/* Progress Ring */}
+              <div className="relative inline-block mb-10">
+                <svg width="220" height="220" viewBox="0 0 200 200" className="transform -rotate-90">
+                  <circle cx="100" cy="100" r={radius} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
+                  <motion.circle
+                    cx="100" cy="100" r={radius} fill="none"
+                    stroke="url(#progressGradient)" strokeWidth="6" strokeLinecap="round"
+                    strokeDasharray={circumference}
+                    initial={{ strokeDashoffset: circumference }}
+                    animate={{ strokeDashoffset: strokeDashoffset }}
+                    transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+                    className="drop-shadow-[0_0_10px_rgba(0,242,254,0.5)]"
                   />
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
-                    <input
-                      type="tel"
-                      placeholder="Telefon Numaranız (5XX...)"
-                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe] transition-colors"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      onFocus={clearRedirectTimer}
-                    />
-                  </div>
-                  <div className="relative">
-                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
-                    <input
-                      type="password"
-                      inputMode="numeric"
-                      maxLength={6}
-                      placeholder="6 Haneli Güvenlik Şifresi"
-                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe] transition-colors tracking-widest font-mono"
-                      value={pinCode}
-                      onChange={(e) => setPinCode(e.target.value.replace(/\D/g, ''))}
-                      onFocus={clearRedirectTimer}
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-white font-medium py-3 rounded-xl hover:opacity-90 transition-opacity text-sm"
+                  <defs>
+                    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#00f2fe" />
+                      <stop offset="100%" stopColor="#4facfe" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <motion.div
+                    initial={{ y: -50, opacity: 0, rotate: -45 }}
+                    animate={{ y: 0, opacity: 1, rotate: 0 }}
+                    transition={{ type: "spring", bounce: 0.6, delay: 0.8 }}
                   >
-                    Yıldızlarımı Yedekle
-                  </button>
-                </form>
-                {backupError && <p className="mt-3 text-sm text-red-400 text-center">{backupError}</p>}
-                <div className="mt-4 pt-4 border-t border-zinc-800 text-center">
-                  <button
-                    onClick={() => { setIsRecovering(true); clearRedirectTimer() }}
-                    className="text-sm text-zinc-500 hover:text-white transition-colors"
+                    <Star className="w-10 h-10 text-[#00f2fe] fill-[#00f2fe] mb-1 drop-shadow-[0_0_15px_rgba(0,242,254,0.6)]" />
+                  </motion.div>
+                  <motion.span 
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
+                    className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-500 tracking-tighter"
                   >
-                    Eski yıldızlarımı telefon numaram ile kurtar
-                  </button>
+                    {stars}
+                  </motion.span>
+                  <motion.span 
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
+                    className="text-xs font-medium text-zinc-500 uppercase tracking-widest mt-1"
+                  >
+                    / {targetStars} YILDIZ
+                  </motion.span>
                 </div>
               </div>
-            )}
 
-            {/* Kurtarma formu */}
-            {isRecovering && !backupSuccess && (
-              <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 text-left mb-6">
-                <h3 className="text-white font-medium mb-2">Eski Yıldızlarını Kurtar</h3>
-                <p className="text-zinc-400 text-sm mb-4">Daha önce kaydettiğiniz telefon numaranızı girin.</p>
-                <form onSubmit={handleRecover} className="space-y-3">
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
-                    <input
-                      type="tel"
-                      placeholder="Telefon Numaranız"
-                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe]"
-                      value={recoverPhone}
-                      onChange={(e) => setRecoverPhone(e.target.value)}
-                    />
-                  </div>
-                  <div className="relative">
-                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
-                    <input
-                      type="password"
-                      inputMode="numeric"
-                      maxLength={6}
-                      placeholder="6 Haneli Kurtarma Şifresi"
-                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe] tracking-widest font-mono"
-                      value={recoverPinCode}
-                      onChange={(e) => setRecoverPinCode(e.target.value.replace(/\D/g, ''))}
-                    />
-                  </div>
-                  <button type="submit" className="w-full bg-zinc-100 text-zinc-900 font-medium py-3 rounded-xl hover:bg-white transition-colors text-sm">
-                    Yıldızları Geri Yükle
-                  </button>
-                </form>
-                {recoverMessage && <p className="mt-3 text-sm text-yellow-400 text-center">{recoverMessage}</p>}
-                <button onClick={() => setIsRecovering(false)} className="mt-4 w-full text-zinc-500 text-sm hover:text-zinc-300">Geri Dön</button>
-              </div>
-            )}
-
-            {/* Yedekleme başarılı */}
-            {backupSuccess && (
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 flex flex-col items-center mt-4 mb-6">
-                <CheckCircle2 className="w-12 h-12 text-emerald-500 mb-3" />
-                <h3 className="text-emerald-500 font-medium text-lg">Harika!</h3>
-                <p className="text-zinc-300 text-sm text-center">
-                  {recoverMessage || 'Yıldızlarınız güvenle buluta kaydedildi.'}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.4 }}
+              >
+                <h1 className="text-3xl font-bold text-white tracking-tight mb-2">Tebrikler! 🎉</h1>
+                <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2fe] to-[#4facfe] font-semibold text-lg mb-2">
+                  Kasiyer Onayladı: {TAG_LABELS[tagType] || `+${starsAdded} Yıldız`}
                 </p>
-              </div>
-            )}
+                <p className="text-zinc-500 text-sm mb-8 font-medium">
+                  {businessName}
+                  {stars >= targetStars && (
+                     <span className="block mt-1 text-amber-400 font-bold">Ödül almaya hak kazandınız! 🌟</span>
+                  )}
+                </p>
+              </motion.div>
 
-            <div className="space-y-2">
-              <a href={targetUrl} className="inline-flex items-center text-zinc-500 hover:text-white transition-colors text-sm">
-                Menüye Devam Et →
-              </a>
-              {countdown > 0 && !backupSuccess && !isRecovering && isBackedUp && (
-                <p className="text-zinc-700 text-xs">{countdown} saniye sonra otomatik yönlendirileceksiniz</p>
+              {/* YEDEKLEME FORMU (Progressive Disclosure) */}
+              <AnimatePresence>
+                {showBackupCard && !backupSuccess && !isRecovering && !isBackedUp && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 80, damping: 20 }}
+                    className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 text-left mb-6 shadow-2xl"
+                  >
+                    <div className="flex items-start gap-3 mb-6">
+                      <div className="p-2 bg-[#00f2fe]/10 rounded-xl shrink-0">
+                        <ShieldCheck className="w-5 h-5 text-[#00f2fe]" />
+                      </div>
+                      <p className="text-zinc-400 text-sm leading-relaxed">
+                        <strong className="text-zinc-200 block mb-1">Yıldızlarını Güvenceye Al</strong> 
+                        Telefonunu değiştirirsen yıldızların kaybolabilir. Hesabını yedekle.
+                      </p>
+                    </div>
+                    <form onSubmit={handleBackup} className="space-y-4">
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          placeholder="İsminiz (Opsiyonel)"
+                          className="w-full bg-[#030712]/50 border border-white/5 rounded-2xl py-3.5 px-4 text-white text-sm focus:outline-none focus:border-[#00f2fe]/50 focus:ring-1 focus:ring-[#00f2fe]/50 transition-all placeholder:text-zinc-600"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          onFocus={clearRedirectTimer}
+                        />
+                        <div className="relative">
+                          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                          <input
+                            type="tel"
+                            placeholder="Telefon (5XX...)"
+                            className="w-full bg-[#030712]/50 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe]/50 focus:ring-1 focus:ring-[#00f2fe]/50 transition-all placeholder:text-zinc-600"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            onFocus={clearRedirectTimer}
+                          />
+                        </div>
+                        <div className="relative">
+                          <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                          <input
+                            type="password"
+                            inputMode="numeric"
+                            maxLength={6}
+                            placeholder="6 Haneli Kurtarma Şifresi"
+                            className="w-full bg-[#030712]/50 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe]/50 focus:ring-1 focus:ring-[#00f2fe]/50 transition-all tracking-widest font-mono placeholder:text-zinc-600"
+                            value={pinCode}
+                            onChange={(e) => setPinCode(e.target.value.replace(/\D/g, ''))}
+                            onFocus={clearRedirectTimer}
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="submit"
+                        className="w-full relative group overflow-hidden bg-white text-black font-semibold py-3.5 rounded-2xl transition-transform active:scale-[0.98] text-sm"
+                      >
+                        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        Yıldızlarımı Yedekle
+                      </button>
+                    </form>
+                    {backupError && <p className="mt-4 text-sm text-red-400 text-center font-medium">{backupError}</p>}
+                    <div className="mt-5 pt-5 border-t border-white/5 text-center">
+                      <button
+                        onClick={() => { setIsRecovering(true); clearRedirectTimer() }}
+                        className="text-sm text-zinc-500 hover:text-white transition-colors font-medium"
+                      >
+                        Eski hesabımı kurtar
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Kurtarma formu */}
+              <AnimatePresence>
+                {isRecovering && !backupSuccess && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+                    className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 text-left mb-6 shadow-2xl"
+                  >
+                    <h3 className="text-white font-semibold mb-2">Hesabı Kurtar</h3>
+                    <p className="text-zinc-500 text-sm mb-6">Daha önce kaydettiğiniz telefon ve 6 haneli şifrenizi girin.</p>
+                    <form onSubmit={handleRecover} className="space-y-4">
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                        <input
+                          type="tel"
+                          placeholder="Telefon Numaranız"
+                          className="w-full bg-[#030712]/50 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe]/50 focus:ring-1 focus:ring-[#00f2fe]/50 transition-all placeholder:text-zinc-600"
+                          value={recoverPhone}
+                          onChange={(e) => setRecoverPhone(e.target.value)}
+                        />
+                      </div>
+                      <div className="relative">
+                        <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                        <input
+                          type="password"
+                          inputMode="numeric"
+                          maxLength={6}
+                          placeholder="6 Haneli Kurtarma Şifresi"
+                          className="w-full bg-[#030712]/50 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-white text-sm focus:outline-none focus:border-[#00f2fe]/50 focus:ring-1 focus:ring-[#00f2fe]/50 transition-all tracking-widest font-mono placeholder:text-zinc-600"
+                          value={recoverPinCode}
+                          onChange={(e) => setRecoverPinCode(e.target.value.replace(/\D/g, ''))}
+                        />
+                      </div>
+                      <button type="submit" className="w-full bg-[#00f2fe] text-black font-semibold py-3.5 rounded-2xl transition-transform active:scale-[0.98] text-sm">
+                        Yıldızları Geri Yükle
+                      </button>
+                    </form>
+                    {recoverMessage && <p className="mt-4 text-sm text-yellow-400 text-center font-medium">{recoverMessage}</p>}
+                    <button onClick={() => setIsRecovering(false)} className="mt-5 w-full text-zinc-500 text-sm hover:text-zinc-300 font-medium transition-colors">Vazgeç</button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Yedekleme başarılı */}
+              {backupSuccess && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                  className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-6 flex flex-col items-center mt-4 mb-6 backdrop-blur-xl"
+                >
+                  <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 0.5 }}>
+                    <CheckCircle2 className="w-12 h-12 text-emerald-400 mb-3" />
+                  </motion.div>
+                  <h3 className="text-emerald-400 font-semibold text-lg mb-1">Harika!</h3>
+                  <p className="text-zinc-400 text-sm text-center font-medium">
+                    {recoverMessage || 'Yıldızlarınız güvenle buluta kaydedildi.'}
+                  </p>
+                </motion.div>
               )}
-            </div>
-          </div>
-        )}
+
+              <motion.div 
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
+                className="space-y-3"
+              >
+                <a href={targetUrl} className="inline-flex items-center justify-center w-full py-4 bg-white/5 border border-white/10 text-white rounded-2xl hover:bg-white/10 transition-colors font-medium text-sm">
+                  Menüye Devam Et
+                </a>
+                {countdown > 0 && !backupSuccess && !isRecovering && isBackedUp && (
+                  <p className="text-zinc-600 text-xs font-medium">{countdown} saniye sonra yönlendirileceksiniz</p>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
