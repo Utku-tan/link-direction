@@ -68,13 +68,13 @@ export async function POST(request: NextRequest) {
     // Müşterinin o anki yıldız sayısını bulalım ki arayüzde doğru gösterelim
     const { data: starsData } = await supabase
       .from('loyalty_stars')
-      .select('current_stars, phone')
+      .select('current_stars, phone_number')
       .eq('business_id', device.business_id)
       .eq('visitor_uuid', visitor_uuid)
       .single()
 
     const currentStars = starsData?.current_stars || 0
-    const isBackedUp = !!starsData?.phone
+    const isBackedUp = !!starsData?.phone_number
 
     const response = NextResponse.json({
       success: true,
