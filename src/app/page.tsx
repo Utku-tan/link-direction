@@ -1,150 +1,232 @@
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
-import { ArrowRight, Zap, BarChart3, Shield, Globe, Link2 } from 'lucide-react'
+import { ArrowRight, Cpu, ShieldCheck, Database, Server, Fingerprint, Lock, CheckCircle2 } from 'lucide-react'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100">
+    <div className="min-h-screen bg-[#030712] text-zinc-100 font-sans selection:bg-[#00f2fe]/30">
       {/* Navbar */}
-      <nav className="border-b border-zinc-800/50 backdrop-blur-xl bg-[#09090b]/80 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+      <nav className="border-b border-white/5 backdrop-blur-xl bg-[#030712]/80 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/">
             <Logo />
           </Link>
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
             >
-              Giriş Yap
+              Müşteri Girişi
             </Link>
             <Link
               href="/register"
-              className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium accent-gradient text-white rounded-lg sm:rounded-xl transition-all duration-200 accent-glow-sm hover:opacity-90"
+              className="px-5 py-2 text-sm font-medium bg-white text-black hover:bg-zinc-200 rounded-lg transition-all duration-200"
             >
-              Ücretsiz Başla
+              Kayıt Ol
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-[#00f2fe]/8 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-[#4facfe]/6 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[800px] h-[400px] sm:h-[800px] bg-[#00f2fe]/3 rounded-full blur-3xl" />
+      {/* Hero Section */}
+      <section className="relative overflow-hidden pt-24 pb-32 sm:pt-32 sm:pb-40 border-b border-white/5">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-[#00f2fe]/[0.03] rounded-full blur-[120px]" />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-16 sm:pt-28 pb-16 sm:pb-24 text-center">
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#00f2fe]/8 border border-[#00f2fe]/20 text-[#00f2fe] text-xs sm:text-sm mb-6 sm:mb-8">
-            <Zap className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
-            Hızlı, güvenli ve akıllı link yönetimi
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0f172a]/80 border border-white/10 text-zinc-300 text-xs font-medium mb-8 tracking-wide">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#00f2fe]" />
+            B2B Kapalı Devre Sadakat Sistemleri
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-            Linklerinizi{' '}
-            <span className="accent-text">Yönetin</span>
-            ,{' '}
-            <br className="hidden sm:block" />
-            Her Tıklamayı{' '}
-            <span className="accent-text">Takip Edin</span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white mb-6">
+            Donanım Güvenceli ve Canlı Onay Mekanizmalı <br className="hidden lg:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2fe] to-[#4facfe]">
+              Dijital Sadakat Altyapısı.
+            </span>
           </h1>
 
-          <p className="mt-4 sm:mt-6 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            Kişisel kısa linkler oluşturun, tıklanma istatistiklerinizi anlık takip edin 
-            ve linklerinizi tek bir panelden yönetin.
+          <p className="mt-6 text-lg text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+            İşletmenizin sadakat programını, suistimale açık statik QR kodlar yerine, kasaya entegre 6'lı Fiziksel NFC Damga Kiti ile dijitalleştirin. Bulut tabanlı canlı doğrulama algoritmasıyla mükerrer işlemleri ve hileli veri girişlerini sıfıra indirin.
           </p>
 
-          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 text-sm sm:text-base font-medium accent-gradient text-white rounded-xl transition-all duration-200 accent-glow hover:opacity-90 w-full sm:w-auto justify-center"
+              className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-semibold text-black bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:shadow-[0_0_30px_rgba(0,242,254,0.5)] w-full sm:w-auto"
             >
-              Ücretsiz Hesap Oluştur
-              <ArrowRight className="w-4 h-4" />
+              Kurumsal Damga Kitini Talep Edin
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href="/login"
-              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 text-sm sm:text-base font-medium text-zinc-300 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-all duration-200 hover:bg-zinc-800/50 w-full sm:w-auto justify-center"
+              href="/register"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-medium text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-200 w-full sm:w-auto"
             >
-              Giriş Yap
+              Bireysel Link Entegrasyonu
             </Link>
-          </div>
-
-          {/* URL Preview */}
-          <div className="mt-10 sm:mt-14 inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-3 rounded-2xl bg-[#18181b]/80 border border-zinc-800 backdrop-blur-xl max-w-full overflow-hidden">
-            <div className="w-3 h-3 rounded-full bg-[#00f2fe] shadow-lg shadow-[#00f2fe]/30 shrink-0" />
-            <code className="text-xs sm:text-sm text-zinc-300 truncate">
-              refly.world/<span className="text-[#00f2fe]">kullanici</span>/<span className="text-[#4facfe]">instagram</span>
-            </code>
-            <ArrowRight className="w-4 h-4 text-zinc-600 shrink-0 hidden sm:block" />
-            <code className="text-xs sm:text-sm text-zinc-500 truncate hidden sm:block">instagram.com/profil</code>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-14 sm:py-24 border-t border-zinc-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-10 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 tracking-tight">Özellikler</h2>
-            <p className="mt-3 text-zinc-400">Link yönetiminizi kolaylaştıran güçlü araçlar</p>
+      {/* Teknik Süreç ve Güvenlik Protokolü */}
+      <section className="py-24 bg-[#030712] relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-white tracking-tight mb-4">3 Aşamalı Güvenlik Akışı</h2>
+            <p className="text-zinc-400 max-w-2xl mx-auto">
+              Sistemin her katmanı uçtan uca şifreleme ve manuel onay yetkilendirmesi ile korunur.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              {
-                icon: Zap,
-                title: 'Anında Yönlendirme',
-                description: 'Linkleriniz milisaniyeler içinde hedef adrese yönlendirilir. 302 redirect ile maksimum hız.',
-              },
-              {
-                icon: BarChart3,
-                title: 'Detaylı İstatistikler',
-                description: 'Tıklanma sayıları, cihaz türü, tarayıcı ve referrer verilerini grafiklerle görün.',
-              },
-              {
-                icon: Shield,
-                title: 'Güvenli Altyapı',
-                description: 'Supabase RLS ile veri güvenliği. Her kullanıcı yalnızca kendi verilerine erişir.',
-              },
-              {
-                icon: Link2,
-                title: 'Kişisel Linkler',
-                description: 'siteadi.com/kullanici/link formatıyla markalı ve hatırlanabilir linkler oluşturun.',
-              },
-              {
-                icon: Globe,
-                title: 'Kolay Yönetim',
-                description: 'Modern dashboard ile linklerinizi oluşturun, düzenleyin ve silin. Tek tıkla URL kopyalayın.',
-              },
-              {
-                icon: ArrowRight,
-                title: 'Limitsiz Esneklik',
-                description: 'Hedef URL\u2019lerinizi istediğiniz zaman güncelleyin. Linkleriniz her zaman güncel kalsın.',
-              },
-            ].map((feature) => (
-              <div
-                key={feature.title}
-                className="rounded-2xl border border-zinc-800 bg-[#18181b]/50 p-6 hover:border-[#00f2fe]/20 hover:bg-[#18181b]/80 transition-all duration-300 group"
-              >
-                <div className="w-12 h-12 rounded-xl accent-gradient flex items-center justify-center shadow-lg mb-5 group-hover:scale-110 transition-transform duration-300 accent-glow-sm">
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-zinc-100 mb-2">{feature.title}</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed">{feature.description}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+            {/* Bağlantı Çizgisi (Desktop) */}
+            <div className="hidden md:block absolute top-1/2 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-[#00f2fe]/20 to-transparent -translate-y-1/2 pointer-events-none" />
+
+            {/* Kart 1 */}
+            <div className="relative z-10 bg-[#0f172a]/60 backdrop-blur-xl border border-white/10 p-8 rounded-2xl hover:bg-[#0f172a]/80 transition-colors">
+              <div className="w-12 h-12 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-6">
+                <Cpu className="w-6 h-6 text-[#00f2fe]" />
               </div>
-            ))}
+              <h3 className="text-xl font-semibold text-white mb-3">1. İstek Başlatma</h3>
+              <div className="text-xs font-semibold text-[#00f2fe] mb-3 uppercase tracking-wider">Kasa Donanımı Teması</div>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Kasiyer kontrolündeki 1-5 arası puan damgasına veya ödül harcama damgasına mobil cihaz yaklaştırılır. Donanım seviyesinde şifrelenmiş benzersiz bir işlem kodu (UID) üretilir.
+              </p>
+            </div>
+
+            {/* Kart 2 */}
+            <div className="relative z-10 bg-[#0f172a]/60 backdrop-blur-xl border border-white/10 p-8 rounded-2xl hover:bg-[#0f172a]/80 transition-colors">
+              <div className="w-12 h-12 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-6">
+                <Server className="w-6 h-6 text-[#00f2fe]" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">2. Canlı Doğrulama</h3>
+              <div className="text-xs font-semibold text-[#00f2fe] mb-3 uppercase tracking-wider">Eşzamanlı Kasa Onayı</div>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                İstek, bulut üzerinden eşzamanlı olarak işletmenin kasa paneline iletilir. Kasiyer paneli üzerinden manuel doğrulama verilmeden veritabanı üzerinde hiçbir puan değişikliği yapılmaz.
+              </p>
+            </div>
+
+            {/* Kart 3 */}
+            <div className="relative z-10 bg-[#0f172a]/60 backdrop-blur-xl border border-white/10 p-8 rounded-2xl hover:bg-[#0f172a]/80 transition-colors">
+              <div className="w-12 h-12 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-6">
+                <Fingerprint className="w-6 h-6 text-[#00f2fe]" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">3. Veri Güvenliği</h3>
+              <div className="text-xs font-semibold text-[#00f2fe] mb-3 uppercase tracking-wider">Aşamalı Yedekleme</div>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Kullanıcı cihaz parmak izi korumasıyla çerez silinmelerine karşı korunur. Bilgiler sadece isim ve telefon numarası eşleşmesiyle bulut altyapısında şifreli (hashed) olarak saklanır.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Fiyatlandırma ve Donanım Kiti */}
+      <section className="py-24 border-t border-white/5 relative bg-[#030712]">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-[#f59e0b]/[0.02] rounded-full blur-[150px]" />
+        </div>
+
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-white tracking-tight mb-4">Kurumsal Tarifeler</h2>
+            <p className="text-zinc-400 max-w-2xl mx-auto">
+              İş modelinize en uygun entegrasyonu seçin. Tüm planlar yüksek erişilebilirlik garantisiyle gelir.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-4xl mx-auto">
+            
+            {/* Kart 1: Bireysel Link */}
+            <div className="bg-[#0f172a]/40 backdrop-blur-md border border-white/10 rounded-3xl p-8 h-fit">
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-white mb-2">Bireysel Hesap</h3>
+                <p className="text-sm text-zinc-400">Standart link yönetimi ve yönlendirme altyapısı.</p>
+              </div>
+              <div className="mb-8">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-bold text-white">₺49</span>
+                  <span className="text-sm text-zinc-500">/ Aylık</span>
+                </div>
+              </div>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-zinc-400 shrink-0" />
+                  <span className="text-sm text-zinc-300">Gelişmiş yönlendirme analitiği</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-zinc-400 shrink-0" />
+                  <span className="text-sm text-zinc-300">Tıklama başına veri raporlama</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-zinc-400 shrink-0" />
+                  <span className="text-sm text-zinc-300">Özel şablon mimarisi</span>
+                </li>
+              </ul>
+              <Link
+                href="/register"
+                className="block w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-center text-sm font-medium text-white transition-colors"
+              >
+                Hemen Başla
+              </Link>
+            </div>
+
+            {/* Kart 2: B2B İşletme Hesabı (Odak) */}
+            <div className="relative bg-[#0f172a]/80 backdrop-blur-xl border border-[#00f2fe]/30 rounded-3xl p-8 shadow-[0_0_40px_rgba(0,242,254,0.1)] transform md:-translate-y-4">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00f2fe] text-black text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
+                Kurumsal Tercih
+              </div>
+              <div className="mb-8 mt-2">
+                <h3 className="text-2xl font-semibold text-white mb-2">B2B İşletme Hesabı</h3>
+                <p className="text-sm text-zinc-400">Refly Donanım ve Kapsamlı Yazılım Kiti</p>
+              </div>
+              <div className="mb-8">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-5xl font-bold text-white">₺999</span>
+                    <span className="text-sm text-zinc-500">/ Aylık</span>
+                  </div>
+                  <div className="text-sm text-[#00f2fe] font-medium mt-1">
+                    + Tek Seferlik ₺999 (Donanım Kiti)
+                  </div>
+                </div>
+              </div>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start gap-3">
+                  <Lock className="w-5 h-5 text-[#00f2fe] shrink-0" />
+                  <span className="text-sm text-zinc-200">6'lı Fiziksel NFC Damga Plakası</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Database className="w-5 h-5 text-[#00f2fe] shrink-0" />
+                  <span className="text-sm text-zinc-200">Gerçek Zamanlı Kasa Dashboard Akışı (Real-time Feed)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ShieldCheck className="w-5 h-5 text-[#00f2fe] shrink-0" />
+                  <span className="text-sm text-zinc-200">Bulut Tabanlı Sayfa Yenileme ve Hile Engelleme Protokolü</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Server className="w-5 h-5 text-[#00f2fe] shrink-0" />
+                  <span className="text-sm text-zinc-200">Müşteri Veri Matrisi (İsim/Telefon Portalı)</span>
+                </li>
+              </ul>
+              <Link
+                href="/register"
+                className="block w-full py-4 px-4 bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl text-center text-sm font-bold text-black transition-colors shadow-[0_0_20px_rgba(0,242,254,0.2)] hover:shadow-[0_0_30px_rgba(0,242,254,0.4)]"
+              >
+                İşletmeniz İçin Başvurun
+              </Link>
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800/50 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-white/5 py-12 bg-[#030712]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <Logo size="sm" />
-          <p className="text-sm text-zinc-500">© 2025 Refly. Tüm hakları saklıdır.</p>
+          <p className="text-sm text-zinc-600 font-medium">© 2026 Refly.world. Güvenli Altyapı Çözümleri.</p>
         </div>
       </footer>
     </div>
