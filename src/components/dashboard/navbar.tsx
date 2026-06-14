@@ -43,7 +43,7 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
   return (
     <>
       {/* Mobile navbar */}
-      <div className="lg:hidden flex items-center justify-between h-16 px-4 border-b border-zinc-800 bg-[#09090b]">
+      <div className="lg:hidden flex items-center justify-between h-16 px-4 border-b border-white/5 bg-[#030712]">
         <Logo />
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -55,9 +55,9 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
 
       {/* Mobile menu overlay */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-[#09090b]/95 backdrop-blur-sm">
+        <div className="lg:hidden fixed inset-0 z-50 bg-[#030712]/95 backdrop-blur-xl">
           <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-800">
+            <div className="flex items-center justify-between h-16 px-4 border-b border-white/5">
               <Logo />
               <button
                 onClick={() => setMobileOpen(false)}
@@ -77,8 +77,8 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
                     className={cn(
                       'flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium transition-all',
                       isActive
-                        ? 'bg-[#00f2fe]/10 text-[#00f2fe]'
-                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                        ? 'bg-[#00f2fe]/10 text-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.1)] border border-[#00f2fe]/10'
+                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
                     )}
                   >
                     <item.icon className="w-5 h-5" />
@@ -90,7 +90,7 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
               {/* İşletme Menüsü */}
               {profile.account_type === 'business' && (
                 <>
-                  <div className="my-3 border-t border-zinc-800" />
+                  <div className="my-3 border-t border-white/5" />
                   <p className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">İşletme</p>
                   {businessItems.map((item) => (
                     <Link
@@ -100,8 +100,8 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
                       className={cn(
                         'flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium transition-all',
                         pathname === item.href
-                          ? 'bg-amber-500/10 text-amber-400'
-                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                          ? 'bg-amber-500/10 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.1)] border border-amber-500/20'
+                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
                       )}
                     >
                       <item.icon className="w-5 h-5" />
@@ -112,7 +112,7 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
               )}
               {profile.role === 'admin' && (
                 <>
-                  <div className="my-3 border-t border-zinc-800" />
+                  <div className="my-3 border-t border-white/5" />
                   <p className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                     Admin
                   </p>
@@ -124,8 +124,8 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
                       className={cn(
                         'flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium transition-all',
                         pathname === item.href
-                          ? 'bg-amber-500/10 text-amber-400'
-                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                          ? 'bg-amber-500/10 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.1)] border border-amber-500/20'
+                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
                       )}
                     >
                       <item.icon className="w-5 h-5" />
@@ -135,7 +135,7 @@ export function DashboardNavbar({ profile }: { profile: Profile }) {
                 </>
               )}
             </nav>
-            <div className="px-4 py-4 border-t border-zinc-800">
+            <div className="px-4 py-4 border-t border-white/5 bg-[#0f172a]/20">
               <div className="flex items-center gap-3 px-3 py-2 mb-2">
                 <div className="w-9 h-9 rounded-full accent-gradient flex items-center justify-center text-white font-semibold text-sm">
                   {profile.username.charAt(0).toUpperCase()}

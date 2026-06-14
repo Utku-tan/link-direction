@@ -40,9 +40,9 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
   }
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 border-r border-zinc-800 bg-[#09090b]">
+    <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 border-r border-white/5 bg-[#030712]">
       {/* Logo */}
-      <div className="px-6 h-16 flex items-center border-b border-zinc-800">
+      <div className="px-6 h-16 flex items-center border-b border-white/5">
         <Link href="/dashboard">
           <Logo />
         </Link>
@@ -59,8 +59,8 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                 isActive
-                  ? 'bg-[#00f2fe]/10 text-[#00f2fe] accent-border-glow'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                  ? 'bg-[#00f2fe]/10 text-[#00f2fe] accent-border-glow shadow-[0_0_15px_rgba(0,242,254,0.1)]'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
               )}
             >
               <item.icon className="w-5 h-5" />
@@ -72,7 +72,7 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
         {/* İşletme hesabı menü öğeleri */}
         {profile.account_type === 'business' && (
           <>
-            <div className="my-4 border-t border-zinc-800" />
+            <div className="my-4 border-t border-white/5" />
             <p className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
               İşletme
             </p>
@@ -85,8 +85,8 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
                   className={cn(
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                     isActive
-                      ? 'bg-amber-500/10 text-amber-400'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                      ? 'bg-amber-500/10 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.1)] border border-amber-500/20'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
                   )}
                 >
                   <item.icon className="w-5 h-5" />
@@ -99,7 +99,7 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
 
         {profile.role === 'admin' && (
           <>
-            <div className="my-4 border-t border-zinc-800" />
+            <div className="my-4 border-t border-white/5" />
             <p className="px-3 mb-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
               Admin
             </p>
@@ -112,8 +112,8 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
                   className={cn(
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                     isActive
-                      ? 'bg-amber-500/10 text-amber-400'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                      ? 'bg-amber-500/10 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.1)] border border-amber-500/20'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
                   )}
                 >
                   <item.icon className="w-5 h-5" />
@@ -126,7 +126,7 @@ export function DashboardSidebar({ profile }: { profile: Profile }) {
       </nav>
 
       {/* User info + Sign out */}
-      <div className="px-4 py-4 border-t border-zinc-800">
+      <div className="px-4 py-4 border-t border-white/5 bg-[#0f172a]/20">
         <div className="flex items-center gap-3 px-3 py-2">
           <div className="w-9 h-9 rounded-full accent-gradient flex items-center justify-center text-white font-semibold text-sm accent-glow-sm">
             {profile.username.charAt(0).toUpperCase()}
