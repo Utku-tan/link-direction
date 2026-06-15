@@ -55,9 +55,6 @@ export function NfcStamp() {
     opacity: 0.9,
   })
 
-  // Sapı Ters Çevirme (180 Derece)
-  sapiScene.rotation.x = Math.PI
-
   // Materyalleri Uygulama
   sapiScene.traverse((child) => {
     if (child instanceof THREE.Mesh) {
@@ -79,7 +76,7 @@ export function NfcStamp() {
     <group ref={group} dispose={null} scale={0.1}>
       {/* Modeli merkeze almak için Center kullanıyoruz. Böylece kenarlara çarpması engellenir. */}
       <Center>
-        <group>
+        <group rotation={[Math.PI, 0, 0]}>
           <primitive object={sapiScene} />
           <primitive object={ucuScene} />
         </group>

@@ -6,7 +6,7 @@ import { NfcStamp } from './NfcStamp'
 
 export function Scene() {
   return (
-    <div className="w-full h-[600px] lg:h-[800px] relative z-10 cursor-grab active:cursor-grabbing">
+    <div className="w-full h-[700px] lg:h-[900px] relative z-10 cursor-grab active:cursor-grabbing">
       <Canvas camera={{ position: [0, 0, 12], fov: 50 }}>
         {/* Ortam Işıkları */}
         <ambientLight intensity={0.6} />
