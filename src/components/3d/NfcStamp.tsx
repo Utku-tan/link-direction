@@ -30,8 +30,8 @@ export function NfcStamp() {
       group.current.position.y = THREE.MathUtils.lerp(0, 6, progress) + floatY
       group.current.position.z = THREE.MathUtils.lerp(0, 3, progress)
 
-      // Rotasyon: Sapı doğrudan ekrana bakacak şekilde tam dik (90 derece) dönüş
-      group.current.rotation.x = THREE.MathUtils.lerp(0.5, Math.PI / 2, progress)
+      // Rotasyon: Damganın alt kısmı ekrana bakacak şekilde (-90 derece) dönüş
+      group.current.rotation.x = THREE.MathUtils.lerp(0.5, -Math.PI / 2, progress)
       group.current.rotation.y = THREE.MathUtils.lerp(-0.5, 0, progress)
       group.current.rotation.z = THREE.MathUtils.lerp(0.2, 0, progress)
 
@@ -40,12 +40,12 @@ export function NfcStamp() {
       const progress = (offset - 0.4) / 0.1
       
       group.current.position.x = 0
-      // Hızla aşağı inip telefona tam yapışma (Y: 0, Z: 0.5 -> 0'a daha yakın)
+      // Hızla aşağı inip telefona tam yapışma
       group.current.position.y = THREE.MathUtils.lerp(6, -0.5, progress)
       group.current.position.z = THREE.MathUtils.lerp(3, 0.5, progress)
       
-      // Tam dik açı korunuyor
-      group.current.rotation.x = Math.PI / 2
+      // Alt yüzeyiyle ekrana basma
+      group.current.rotation.x = -Math.PI / 2
       group.current.rotation.y = 0
       group.current.rotation.z = 0
 
@@ -58,7 +58,7 @@ export function NfcStamp() {
       group.current.position.z = THREE.MathUtils.lerp(0.5, 0, progress)
 
       // Vurma açısından -> Normal duruşa geri dönüp takla atma (spin)
-      group.current.rotation.x = THREE.MathUtils.lerp(Math.PI / 2, 0.2, progress)
+      group.current.rotation.x = THREE.MathUtils.lerp(-Math.PI / 2, 0.2, progress)
       group.current.rotation.y = THREE.MathUtils.lerp(0, Math.PI * 2, progress)
       group.current.rotation.z = THREE.MathUtils.lerp(0, -0.2, progress)
     }
