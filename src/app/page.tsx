@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { ArrowRight, Cpu, ShieldCheck, Database, Server, Fingerprint, Lock, CheckCircle2 } from 'lucide-react'
+import { Scene } from '@/components/3d/Scene'
 
 export default function LandingPage() {
   return (
@@ -34,37 +35,47 @@ export default function LandingPage() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-[#00f2fe]/[0.03] rounded-full blur-[120px]" />
         </div>
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0f172a]/80 border border-white/10 text-zinc-300 text-xs font-medium mb-8 tracking-wide">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#00f2fe]" />
-            B2B Kapalı Devre Sadakat Sistemleri
-          </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Sol Taraf: Metinler */}
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0f172a]/80 border border-white/10 text-zinc-300 text-xs font-medium mb-8 tracking-wide">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#00f2fe]" />
+                B2B Kapalı Devre Sadakat Sistemleri
+              </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white mb-6">
-            Donanım Güvenceli ve Canlı Onay Mekanizmalı <br className="hidden lg:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2fe] to-[#4facfe]">
-              Dijital Sadakat Altyapısı.
-            </span>
-          </h1>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white mb-6">
+                Donanım Güvenceli ve Canlı Onay Mekanizmalı <br className="hidden lg:block" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2fe] to-[#4facfe]">
+                  Dijital Sadakat Altyapısı.
+                </span>
+              </h1>
 
-          <p className="mt-6 text-lg text-zinc-400 max-w-3xl mx-auto leading-relaxed">
-            İşletmenizin sadakat programını, suistimale açık statik QR kodlar yerine, kasaya entegre 6'lı Fiziksel NFC Damga Kiti ile dijitalleştirin. Bulut tabanlı canlı doğrulama algoritmasıyla mükerrer işlemleri ve hileli veri girişlerini sıfıra indirin.
-          </p>
+              <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                İşletmenizin sadakat programını, suistimale açık statik QR kodlar yerine, kasaya entegre 6'lı Fiziksel NFC Damga Kiti ile dijitalleştirin. Bulut tabanlı canlı doğrulama algoritmasıyla mükerrer işlemleri ve hileli veri girişlerini sıfıra indirin.
+              </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/register"
-              className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-semibold text-black bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:shadow-[0_0_30px_rgba(0,242,254,0.5)] w-full sm:w-auto"
-            >
-              Kurumsal Damga Kitini Talep Edin
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-medium text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-200 w-full sm:w-auto"
-            >
-              Bireysel Link Entegrasyonu
-            </Link>
+              <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <Link
+                  href="/register"
+                  className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-semibold text-black bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:shadow-[0_0_30px_rgba(0,242,254,0.5)] w-full sm:w-auto"
+                >
+                  Kurumsal Damga Kitini Talep Edin
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-medium text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-200 w-full sm:w-auto"
+                >
+                  Bireysel Link Entegrasyonu
+                </Link>
+              </div>
+            </div>
+
+            {/* Sağ Taraf: 3D Sahne */}
+            <div className="w-full h-full min-h-[400px] lg:min-h-[500px]">
+              <Scene />
+            </div>
           </div>
         </div>
       </section>
