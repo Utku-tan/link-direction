@@ -1,14 +1,14 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
 import { CheckCircle2 } from 'lucide-react'
 
 // Konfeti parçacıkları için basit bir dizi
-const PARTICLE_COUNT = 12
+const PARTICLE_COUNT = 15
 const particles = Array.from({ length: PARTICLE_COUNT }).map((_, i) => {
   const angle = (i / PARTICLE_COUNT) * Math.PI * 2
-  const distance = 100 + Math.random() * 50
+  const distance = 100 + Math.random() * 80
   return {
     x: Math.cos(angle) * distance,
     y: Math.sin(angle) * distance,
@@ -18,22 +18,24 @@ const particles = Array.from({ length: PARTICLE_COUNT }).map((_, i) => {
 })
 
 export function PhoneMockup() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { margin: "-40% 0px -40% 0px", once: false })
   const [isTapped, setIsTapped] = useState(false)
+  const { scrollYProgress } = useScroll()
 
-  useEffect(() => {
-    if (isInView) {
-      // Damganın "bam" diye vurduğu anı (tahmini gecikme)
-      const timer = setTimeout(() => setIsTapped(true), 300) 
-      return () => clearTimeout(timer)
+  // Damganın vurma anı (offset >= 0.48) tam olarak senkronize ediliyor
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (latest >= 0.48 && latest <= 0.8) {
+      setIsTapped(true)
     } else {
       setIsTapped(false)
     }
-  }, [isInView])
+  })
 
   return (
-    <div ref={ref} className="relative w-[280px] h-[580px] rounded-[50px] border-[14px] border-[#1e293b] bg-black shadow-2xl flex flex-col overflow-visible ring-1 ring-white/20">
+    <motion.div 
+      animate={isTapped ? { scale: 0.96, y: 10 } : { scale: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+      className="relative w-[280px] h-[580px] rounded-[50px] border-[14px] border-[#1e293b] bg-black shadow-2xl flex flex-col overflow-visible ring-1 ring-white/20"
+    >
       
       {/* Çentik (Notch) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90px] h-[25px] bg-[#1e293b] rounded-b-[16px] z-20 flex items-center justify-center">
@@ -106,6 +108,6 @@ export function PhoneMockup() {
           </div>
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   )
 }

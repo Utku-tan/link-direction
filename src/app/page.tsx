@@ -61,42 +61,52 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 2: 3 Aşamalı Güvenlik ve Telefon */}
-        <section className="min-h-screen w-full relative flex flex-col items-center justify-center pt-24 pb-24">
-          <div className="w-full text-center mb-16">
-            <h2 className="text-3xl font-bold text-white tracking-tight mb-4">3 Aşamalı Güvenlik Akışı</h2>
-            <p className="text-zinc-400 max-w-2xl mx-auto">
-              Sistemin her katmanı uçtan uca şifreleme ve manuel onay yetkilendirmesi ile korunur.
-            </p>
-          </div>
+        {/* Section 2: 3 Aşamalı Güvenlik ve Telefon (Sticky Scroll Mimarisi) */}
+        <section className="relative h-[300vh] w-full">
+          <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center pointer-events-none">
+            
+            {/* Üst Başlıklar */}
+            <div className="absolute top-20 w-full text-center z-20 pointer-events-auto px-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-4">3 Aşamalı Güvenlik Akışı</h2>
+              <p className="text-zinc-400 max-w-2xl mx-auto text-sm sm:text-base">
+                Sistemin her katmanı uçtan uca şifreleme ve manuel onay yetkilendirmesi ile korunur.
+              </p>
+            </div>
 
-          {/* Telefon Tam Ortada */}
-          <div className="flex-1 flex items-center justify-center w-full relative z-20 mb-20 pointer-events-auto">
-            <PhoneMockup />
-          </div>
+            {/* Telefon Tam Matematiksel Ortada (Y:0) */}
+            <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-auto">
+              <PhoneMockup />
+            </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-20 pointer-events-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
-                <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
-                  <Cpu className="w-5 h-5 text-[#00f2fe]" />
+            {/* Alt Kısım: Kartlar */}
+            <div className="absolute bottom-16 w-full max-w-7xl mx-auto px-4 sm:px-6 z-20 pointer-events-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Kart 1 */}
+                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
+                  <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
+                    <Cpu className="w-5 h-5 text-[#00f2fe]" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">1. Fiziksel Temas</h3>
+                  <p className="text-zinc-400 text-xs leading-relaxed">Müşteri cihazına NFC damga ile fiziksel yetkilendirme gönderilir.</p>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">1. Fiziksel Temas</h3>
-                <p className="text-zinc-400 text-xs leading-relaxed">Müşteri cihazına NFC damga ile fiziksel yetkilendirme gönderilir.</p>
-              </div>
-              <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
-                <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
-                  <Server className="w-5 h-5 text-[#00f2fe]" />
+
+                {/* Kart 2 */}
+                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
+                  <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
+                    <Server className="w-5 h-5 text-[#00f2fe]" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">2. Canlı Doğrulama</h3>
+                  <p className="text-zinc-400 text-xs leading-relaxed">Kasiyer onayı olmadan işlem veritabanına işlenmez.</p>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">2. Canlı Doğrulama</h3>
-                <p className="text-zinc-400 text-xs leading-relaxed">Kasiyer onayı olmadan işlem veritabanına işlenmez.</p>
-              </div>
-              <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
-                <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
-                  <Fingerprint className="w-5 h-5 text-[#00f2fe]" />
+
+                {/* Kart 3 */}
+                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
+                  <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
+                    <Fingerprint className="w-5 h-5 text-[#00f2fe]" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">3. Hile Koruması</h3>
+                  <p className="text-zinc-400 text-xs leading-relaxed">Benzersiz cihaz parmak izi ile mükerrer işlemler anında reddedilir.</p>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">3. Hile Koruması</h3>
-                <p className="text-zinc-400 text-xs leading-relaxed">Benzersiz cihaz parmak izi ile mükerrer işlemler anında reddedilir.</p>
               </div>
             </div>
           </div>
