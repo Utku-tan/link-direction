@@ -36,9 +36,9 @@ export default function LandingPage() {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Sol Taraf: Metinler */}
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-left lg:col-span-5">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0f172a]/80 border border-white/10 text-zinc-300 text-xs font-medium mb-8 tracking-wide">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#00f2fe]" />
                 B2B Kapalı Devre Sadakat Sistemleri
@@ -73,7 +73,7 @@ export default function LandingPage() {
             </div>
 
             {/* Sağ Taraf: 3D Sahne */}
-            <div className="w-full h-full min-h-[400px] lg:min-h-[500px]">
+            <div className="w-full h-full min-h-[500px] lg:min-h-[700px] lg:col-span-7 scale-110 lg:scale-125 origin-center">
               <Scene />
             </div>
           </div>
