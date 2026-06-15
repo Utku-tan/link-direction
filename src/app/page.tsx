@@ -6,35 +6,35 @@ import { PhoneMockup } from '@/components/PhoneMockup'
 
 export default function LandingPage() {
   return (
-    <div className="bg-[#030712] text-zinc-100 font-sans selection:bg-[#00f2fe]/30">
-      {/* Navbar - Fixed outside 3D Scene */}
+    <div className="bg-[#030712] text-zinc-100 font-sans selection:bg-[#00f2fe]/30 relative overflow-x-hidden">
+      {/* Navbar - Fixed en üstte */}
       <nav className="fixed w-full border-b border-white/5 backdrop-blur-xl bg-[#030712]/80 top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/">
             <Logo />
           </Link>
           <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-            >
+            <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
               Müşteri Girişi
             </Link>
-            <Link
-              href="/register"
-              className="px-5 py-2 text-sm font-medium bg-white text-black hover:bg-zinc-200 rounded-lg transition-all duration-200"
-            >
+            <Link href="/register" className="px-5 py-2 text-sm font-medium bg-white text-black hover:bg-zinc-200 rounded-lg transition-all duration-200">
               Kayıt Ol
             </Link>
           </div>
         </div>
       </nav>
 
-      <Scene>
-        {/* Section 1: Hero (100vh) */}
-        <section className="h-screen w-full relative flex items-center justify-start pt-20 pointer-events-none">
+      {/* 3D Sahne - Native Scroll'un Üzerinde Overlay Olarak (Z-40), Clicks Pass Through */}
+      <div className="fixed inset-0 w-full h-full z-40 pointer-events-none">
+        <Scene />
+      </div>
+
+      {/* Native Scrollable İçerik (Z-10) */}
+      <main className="relative z-10 w-full">
+        {/* Section 1: Hero */}
+        <section className="min-h-screen w-full relative flex flex-col justify-center pt-24 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full">
-            <div className="lg:w-1/2 pointer-events-auto">
+            <div className="lg:w-[45%]">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0f172a]/80 border border-white/10 text-zinc-300 text-xs font-medium mb-8 tracking-wide">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#00f2fe]" />
                 B2B Kapalı Devre Sadakat Sistemleri
@@ -52,10 +52,7 @@ export default function LandingPage() {
               </p>
 
               <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-                <Link
-                  href="/register"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-semibold text-black bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:shadow-[0_0_30px_rgba(0,242,254,0.5)] w-full sm:w-auto"
-                >
+                <Link href="/register" className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-semibold text-black bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:shadow-[0_0_30px_rgba(0,242,254,0.5)] w-full sm:w-auto">
                   Kurumsal Damga Kitini Talep Edin
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -64,17 +61,22 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 2: 3 Aşamalı Güvenlik ve Telefon (Min 100vh) */}
-        <section className="min-h-screen w-full relative flex flex-col items-center justify-center pointer-events-none pt-24 pb-12">
-          {/* Üst Kısım: Telefon */}
-          <div className="flex-1 flex items-center justify-center pointer-events-auto">
+        {/* Section 2: 3 Aşamalı Güvenlik ve Telefon */}
+        <section className="min-h-screen w-full relative flex flex-col items-center justify-center pt-24 pb-24">
+          <div className="w-full text-center mb-16">
+            <h2 className="text-3xl font-bold text-white tracking-tight mb-4">3 Aşamalı Güvenlik Akışı</h2>
+            <p className="text-zinc-400 max-w-2xl mx-auto">
+              Sistemin her katmanı uçtan uca şifreleme ve manuel onay yetkilendirmesi ile korunur.
+            </p>
+          </div>
+
+          {/* Telefon Tam Ortada */}
+          <div className="flex-1 flex items-center justify-center w-full relative z-20 mb-20 pointer-events-auto">
             <PhoneMockup />
           </div>
 
-          {/* Alt Kısım: Kartlar (Telefon ile çakışmayı önlemek için margin eklendi) */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-20 mt-12 pointer-events-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-20 pointer-events-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Kart 1 */}
               <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
                 <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                   <Cpu className="w-5 h-5 text-[#00f2fe]" />
@@ -82,8 +84,6 @@ export default function LandingPage() {
                 <h3 className="text-lg font-semibold text-white mb-2">1. Fiziksel Temas</h3>
                 <p className="text-zinc-400 text-xs leading-relaxed">Müşteri cihazına NFC damga ile fiziksel yetkilendirme gönderilir.</p>
               </div>
-
-              {/* Kart 2 */}
               <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
                 <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                   <Server className="w-5 h-5 text-[#00f2fe]" />
@@ -91,8 +91,6 @@ export default function LandingPage() {
                 <h3 className="text-lg font-semibold text-white mb-2">2. Canlı Doğrulama</h3>
                 <p className="text-zinc-400 text-xs leading-relaxed">Kasiyer onayı olmadan işlem veritabanına işlenmez.</p>
               </div>
-
-              {/* Kart 3 */}
               <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
                 <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                   <Fingerprint className="w-5 h-5 text-[#00f2fe]" />
@@ -104,8 +102,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 3: Kurumsal Tarifeler (100vh) */}
-        <section className="h-screen w-full relative flex items-center pointer-events-none bg-gradient-to-t from-[#030712] to-transparent">
+        {/* Section 3: Kurumsal Tarifeler */}
+        <section className="min-h-screen w-full relative flex items-center bg-gradient-to-t from-[#0f172a]/40 to-transparent pt-24 pb-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full pointer-events-auto">
             <div className="lg:w-1/2 ml-auto">
               <div className="text-left mb-12">
@@ -113,7 +111,6 @@ export default function LandingPage() {
                 <p className="text-zinc-400">İş modelinize en uygun entegrasyonu seçin.</p>
               </div>
 
-              {/* Sadece B2B Kartı (Sağ tarafta) */}
               <div className="relative bg-[#0f172a]/80 backdrop-blur-xl border border-[#00f2fe]/30 rounded-3xl p-8 shadow-[0_0_40px_rgba(0,242,254,0.1)]">
                 <div className="absolute -top-4 left-8 bg-[#00f2fe] text-black text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
                   Kurumsal Tercih
@@ -139,10 +136,7 @@ export default function LandingPage() {
                     <span className="text-sm text-zinc-200">Gerçek Zamanlı Kasa Dashboard Akışı</span>
                   </li>
                 </ul>
-                <Link
-                  href="/register"
-                  className="block w-full py-4 px-4 bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl text-center text-sm font-bold text-black transition-colors"
-                >
+                <Link href="/register" className="block w-full py-4 px-4 bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl text-center text-sm font-bold text-black transition-colors">
                   İşletmeniz İçin Başvurun
                 </Link>
               </div>
@@ -150,14 +144,14 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Footer (Kısa bölüm) */}
-        <footer className="border-t border-white/5 py-12 bg-[#030712] pointer-events-auto">
+        {/* Footer */}
+        <footer className="border-t border-white/5 py-12 bg-[#030712] relative z-20 pointer-events-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <Logo size="sm" />
             <p className="text-sm text-zinc-600 font-medium">© 2026 Refly.world. Güvenli Altyapı Çözümleri.</p>
           </div>
         </footer>
-      </Scene>
+      </main>
     </div>
   )
 }
