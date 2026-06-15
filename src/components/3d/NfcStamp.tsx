@@ -76,8 +76,12 @@ export function NfcStamp() {
     <group ref={group} dispose={null} scale={0.1}>
       {/* Modeli merkeze almak için Center kullanıyoruz. Böylece kenarlara çarpması engellenir. */}
       <Center>
-        <group rotation={[Math.PI, 0, 0]}>
-          <primitive object={sapiScene} />
+        <group>
+          {/* Sadece sap kısmını (sapiScene) X ekseninde 180 derece çeviriyoruz */}
+          <group rotation={[Math.PI, 0, 0]}>
+            <primitive object={sapiScene} />
+          </group>
+          {/* Uç kısmı (ucuScene) olduğu gibi kalıyor */}
           <primitive object={ucuScene} />
         </group>
       </Center>
