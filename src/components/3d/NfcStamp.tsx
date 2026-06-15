@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, Center } from '@react-three/drei'
 import * as THREE from 'three'
 
 export function NfcStamp() {
@@ -77,9 +77,13 @@ export function NfcStamp() {
 
   return (
     <group ref={group} dispose={null} scale={0.1}>
-      {/* Sahneleri doğrudan ekliyoruz */}
-      <primitive object={sapiScene} />
-      <primitive object={ucuScene} />
+      {/* Modeli merkeze almak için Center kullanıyoruz. Böylece kenarlara çarpması engellenir. */}
+      <Center>
+        <group>
+          <primitive object={sapiScene} />
+          <primitive object={ucuScene} />
+        </group>
+      </Center>
     </group>
   )
 }
