@@ -6,8 +6,9 @@ import { PhoneMockup } from '@/components/PhoneMockup'
 
 export default function LandingPage() {
   return (
-    <div className="bg-[#030712] text-zinc-100 font-sans selection:bg-[#00f2fe]/30 relative overflow-x-hidden">
-      {/* Navbar - Fixed en üstte */}
+    // overflow-x-hidden kullanıldığında CSS sticky çalışmaz! Bunu kaldırdım.
+    <div className="bg-[#030712] text-zinc-100 font-sans selection:bg-[#00f2fe]/30 w-full overflow-x-clip">
+      {/* Navbar */}
       <nav className="fixed w-full border-b border-white/5 backdrop-blur-xl bg-[#030712]/80 top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/">
@@ -24,12 +25,11 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* 3D Sahne - Native Scroll'un Üzerinde Overlay Olarak (Z-40), Clicks Pass Through */}
+      {/* 3D Sahne - Clicks Pass Through */}
       <div className="fixed inset-0 w-full h-full z-40 pointer-events-none">
         <Scene />
       </div>
 
-      {/* Native Scrollable İçerik (Z-10) */}
       <main className="relative z-10 w-full">
         {/* Section 1: Hero */}
         <section className="min-h-screen w-full relative flex flex-col justify-center pt-24 pb-12">
@@ -61,28 +61,29 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 2: 3 Aşamalı Güvenlik ve Telefon (Sticky Scroll Mimarisi) */}
+        {/* Section 2: 3 Aşamalı Güvenlik ve Telefon (Sticky Scroll) */}
         <section className="relative h-[300vh] w-full">
-          <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center pointer-events-none">
+          <div className="sticky top-0 h-screen w-full overflow-hidden pointer-events-none">
             
             {/* Üst Başlıklar */}
-            <div className="absolute top-20 w-full text-center z-20 pointer-events-auto px-4">
+            <div className="absolute top-20 left-0 right-0 mx-auto w-full max-w-2xl text-center z-20 pointer-events-auto px-4">
               <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-4">3 Aşamalı Güvenlik Akışı</h2>
-              <p className="text-zinc-400 max-w-2xl mx-auto text-sm sm:text-base">
+              <p className="text-zinc-400 text-sm sm:text-base">
                 Sistemin her katmanı uçtan uca şifreleme ve manuel onay yetkilendirmesi ile korunur.
               </p>
             </div>
 
-            {/* Telefon Tam Matematiksel Ortada (Y:0) */}
+            {/* Telefon Tam Merkezde */}
             <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-auto">
               <PhoneMockup />
             </div>
 
-            {/* Alt Kısım: Kartlar */}
-            <div className="absolute bottom-16 w-full max-w-7xl mx-auto px-4 sm:px-6 z-20 pointer-events-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Alt Kısım: Kartlar (Mobilde Yatay Scroll) */}
+            <div className="absolute bottom-10 left-0 right-0 mx-auto w-full max-w-7xl z-20 pointer-events-auto">
+              <div className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto snap-x snap-mandatory px-4 sm:px-6 pb-6 hide-scrollbar">
+                
                 {/* Kart 1 */}
-                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
+                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
                   <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                     <Cpu className="w-5 h-5 text-[#00f2fe]" />
                   </div>
@@ -91,7 +92,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Kart 2 */}
-                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
+                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
                   <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                     <Server className="w-5 h-5 text-[#00f2fe]" />
                   </div>
@@ -100,13 +101,14 @@ export default function LandingPage() {
                 </div>
 
                 {/* Kart 3 */}
-                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
+                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
                   <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                     <Fingerprint className="w-5 h-5 text-[#00f2fe]" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">3. Hile Koruması</h3>
                   <p className="text-zinc-400 text-xs leading-relaxed">Benzersiz cihaz parmak izi ile mükerrer işlemler anında reddedilir.</p>
                 </div>
+
               </div>
             </div>
           </div>
