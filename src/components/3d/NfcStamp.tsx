@@ -27,11 +27,41 @@ export function NfcStamp() {
     group.current.rotation.x += 0.05 * (-targetY - group.current.rotation.x)
   })
 
-  // Sitenin konseptine uygun olarak neon/metalik dokunuşlar yapmak için 
-  // traverse edip materyalleri özelleştirebiliriz (opsiyonel).
+  // Premium Cam (Glassmorphism) Materyali
+  const glassMaterial = new THREE.MeshPhysicalMaterial({
+    color: '#0f172a',     // Koyu lacivert/siyah ton
+    emissive: '#00f2fe',  // Hafif neon mavi parlaması
+    emissiveIntensity: 0.1,
+    metalness: 0.5,
+    roughness: 0.1,
+    transmission: 0.95,   // Cam şeffaflığı (Işığı geçirgenlik)
+    ior: 1.5,             // Kırılma indisi (Cam için 1.5 ideal)
+    thickness: 2.0,       // Hacimsel kalınlık
+    transparent: true,
+    opacity: 1,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1,
+  })
+
+  // Daha parlak ve belirgin bir cam (Belki uç kısım için)
+  const neonGlassMaterial = new THREE.MeshPhysicalMaterial({
+    color: '#00f2fe',     // Neon mavi
+    metalness: 0.2,
+    roughness: 0.05,
+    transmission: 0.8,
+    ior: 1.5,
+    thickness: 1.0,
+    transparent: true,
+    opacity: 0.9,
+  })
+
+  // Sapı Ters Çevirme (180 Derece)
+  sapiScene.rotation.x = Math.PI
+
+  // Materyalleri Uygulama
   sapiScene.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      // Modelin kendi kaplamaları kalabilir, şimdilik sadece gölge atamasını yapalım
+      child.material = glassMaterial
       child.castShadow = true
       child.receiveShadow = true
     }
@@ -39,6 +69,7 @@ export function NfcStamp() {
 
   ucuScene.traverse((child) => {
     if (child instanceof THREE.Mesh) {
+      child.material = neonGlassMaterial
       child.castShadow = true
       child.receiveShadow = true
     }
