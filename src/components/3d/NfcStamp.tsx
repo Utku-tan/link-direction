@@ -78,11 +78,11 @@ export function NfcStamp() {
       <Center>
         <group>
           {/* Sapı (sapiScene) YUKARI almak için position ekliyoruz */}
-          <group rotation={[Math.PI, 0, 0]} position={[0, 10, 0]}>
+          <group rotation={[Math.PI, 0, 0]} position={[0, 20, 0]}>
             <primitive object={sapiScene} />
           </group>
           {/* Ucu (ucuScene) AŞAĞI almak için position ekliyoruz */}
-          <group position={[0, -10, 0]}>
+          <group position={[0, -20, 0]}>
             <primitive object={ucuScene} />
           </group>
         </group>
