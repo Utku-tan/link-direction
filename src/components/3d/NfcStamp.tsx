@@ -45,7 +45,7 @@ export function NfcStamp() {
   })
 
   return (
-    <group ref={group} dispose={null} scale={0.25}>
+    <group ref={group} dispose={null} scale={0.1}>
       {/* Sahneleri doğrudan ekliyoruz */}
       <primitive object={sapiScene} />
       <primitive object={ucuScene} />
