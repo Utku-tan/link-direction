@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { ArrowRight, Cpu, ShieldCheck, Database, Server, Fingerprint, Lock, CheckCircle2 } from 'lucide-react'
 import { Scene } from '@/components/3d/Scene'
+import { PhoneMockup } from '@/components/PhoneMockup'
 
 export default function LandingPage() {
   return (
@@ -63,59 +64,41 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 2: 3 Aşamalı Güvenlik ve TELEFON SVG (100vh) */}
-        <section className="h-screen w-full relative flex flex-col items-center justify-center pointer-events-none">
-          <div className="absolute inset-0 flex items-center justify-center">
-            {/* Telefon SVG'si ve İçindeki Ekran Animasyonu */}
-            <div className="relative w-[300px] h-[600px] pointer-events-auto">
-              <img src="/Telefon.svg" alt="Phone" className="absolute inset-0 w-full h-full object-contain z-10" />
-              
-              {/* Telefon Ekranı İçeriği (Yıldız Kazanma Animasyonu) */}
-              <div className="absolute inset-0 m-auto w-[270px] h-[580px] bg-[#0f172a] rounded-[40px] overflow-hidden z-0 flex flex-col items-center justify-center border-4 border-black">
-                {/* Animasyonlu Yıldız veya Tik */}
-                <div className="w-24 h-24 bg-[#00f2fe]/20 rounded-full flex items-center justify-center mb-6 animate-pulse">
-                  <CheckCircle2 className="w-12 h-12 text-[#00f2fe]" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Başarılı!</h3>
-                <p className="text-sm text-zinc-400 text-center px-6">
-                  1 Yıldız kazandınız.
-                </p>
-                <div className="mt-8 flex gap-2">
-                  {[1,2,3,4,5].map(i => (
-                    <div key={i} className={`w-8 h-8 rounded-full ${i === 1 ? 'bg-[#00f2fe]' : 'bg-white/10'}`} />
-                  ))}
-                </div>
-              </div>
-            </div>
+        {/* Section 2: 3 Aşamalı Güvenlik ve Telefon (Min 100vh) */}
+        <section className="min-h-screen w-full relative flex flex-col items-center justify-center pointer-events-none pt-24 pb-12">
+          {/* Üst Kısım: Telefon */}
+          <div className="flex-1 flex items-center justify-center pointer-events-auto">
+            <PhoneMockup />
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-20 mt-auto pb-20 pointer-events-auto">
+          {/* Alt Kısım: Kartlar (Telefon ile çakışmayı önlemek için margin eklendi) */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-20 mt-12 pointer-events-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Kart 1 */}
-              <div className="bg-[#0f172a]/60 backdrop-blur-xl border border-white/10 p-6 rounded-2xl">
+              <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
                 <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                   <Cpu className="w-5 h-5 text-[#00f2fe]" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">1. Fiziksel Temas</h3>
-                <p className="text-zinc-400 text-xs">Müşteri cihazına NFC damga ile fiziksel yetkilendirme gönderilir.</p>
+                <p className="text-zinc-400 text-xs leading-relaxed">Müşteri cihazına NFC damga ile fiziksel yetkilendirme gönderilir.</p>
               </div>
 
               {/* Kart 2 */}
-              <div className="bg-[#0f172a]/60 backdrop-blur-xl border border-white/10 p-6 rounded-2xl">
+              <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
                 <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                   <Server className="w-5 h-5 text-[#00f2fe]" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">2. Canlı Doğrulama</h3>
-                <p className="text-zinc-400 text-xs">Kasiyer onayı olmadan işlem veritabanına işlenmez.</p>
+                <p className="text-zinc-400 text-xs leading-relaxed">Kasiyer onayı olmadan işlem veritabanına işlenmez.</p>
               </div>
 
               {/* Kart 3 */}
-              <div className="bg-[#0f172a]/60 backdrop-blur-xl border border-white/10 p-6 rounded-2xl">
+              <div className="bg-[#0f172a]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
                 <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                   <Fingerprint className="w-5 h-5 text-[#00f2fe]" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">3. Hile Koruması</h3>
-                <p className="text-zinc-400 text-xs">Benzersiz cihaz parmak izi ile mükerrer işlemler anında reddedilir.</p>
+                <p className="text-zinc-400 text-xs leading-relaxed">Benzersiz cihaz parmak izi ile mükerrer işlemler anında reddedilir.</p>
               </div>
             </div>
           </div>

@@ -7,71 +7,74 @@ import * as THREE from 'three'
 
 export function NfcStamp() {
   const group = useRef<THREE.Group>(null)
-  
-  // Tek bir modeli yüklüyoruz.
   const { scene: damgaScene } = useGLTF('/damga.glb')
-  
-  // Scroll kontrolcüsünü alıyoruz
   const scroll = useScroll()
 
-  // Mouse hareketine göre hafif salınım (float) ve scroll tabanlı hikayeleştirme
   useFrame((state) => {
     if (!group.current) return
     const offset = scroll.offset
     const t = state.clock.getElapsedTime()
     
-    // Sürekli devam eden hafif yüzerlik efekti
-    const floatY = Math.sin(t * 2) * 0.15
+    // Yüzerlik (floating) sadece belirli aralıklarda uygulanacak
+    const floatY = Math.sin(t * 3) * 0.1
 
-    if (offset < 0.5) {
-      // 1. Kısım: Hero'dan (0) -> Telefona Dokunma (0.5)
-      // offset 0'dan 0.5'e giderken, progress 0'dan 1'e gider
-      const progress = offset * 2 
-      
-      // Pozisyon: Sağdan (X:6) -> Merkeze/Telefona (X:0) ve Ekrana Yaklaşma (Z:4)
+    if (offset < 0.35) {
+      // 1. AŞAMA (0.0 - 0.35): Yaklaşma ve Havaya Kalkma
+      const progress = offset / 0.35
+      // Sağdan merkeze, telefona yukarıdan yaklaşma (Y: 5 yüksek)
       group.current.position.x = THREE.MathUtils.lerp(6, 0, progress)
-      group.current.position.y = THREE.MathUtils.lerp(0, 1.5, progress) + floatY
-      group.current.position.z = THREE.MathUtils.lerp(0, 4, progress) 
+      group.current.position.y = THREE.MathUtils.lerp(0, 5, progress) + floatY
+      group.current.position.z = THREE.MathUtils.lerp(0, 3, progress)
 
-      // Rotasyon: Çapraz havalı duruştan -> Telefone paralel dokunma açısına
-      group.current.rotation.x = THREE.MathUtils.lerp(0.5, Math.PI / 2.5, progress)
+      // Rotasyon: Sapı doğrudan ekrana (kameraya/Z eksenine) bakacak şekilde tam dik (90 derece) dönüş
+      group.current.rotation.x = THREE.MathUtils.lerp(0.5, Math.PI / 2, progress)
       group.current.rotation.y = THREE.MathUtils.lerp(-0.5, 0, progress)
       group.current.rotation.z = THREE.MathUtils.lerp(0.2, 0, progress)
+
+    } else if (offset >= 0.35 && offset < 0.5) {
+      // 2. AŞAMA (0.35 - 0.5): BAM! Ekrana Vurma
+      const progress = (offset - 0.35) / 0.15
       
+      group.current.position.x = 0
+      // Hızla aşağı (Y: 1.5) inip Z'de ekrana temas etme (Z: 0.5)
+      group.current.position.y = THREE.MathUtils.lerp(5, 1.5, progress)
+      group.current.position.z = THREE.MathUtils.lerp(3, 0.5, progress)
+      
+      // Tam dik açı korunuyor
+      group.current.rotation.x = Math.PI / 2
+      group.current.rotation.y = 0
+      group.current.rotation.z = 0
+
     } else {
-      // 2. Kısım: Telefondan (0.5) -> Fiyatlandırma Kartına (1.0)
-      // offset 0.5'ten 1.0'a giderken, progress 0'dan 1'e gider
+      // 3. AŞAMA (0.5 - 1.0): Ayrılma ve Fiyat Kartına Dönerek İnme
       const progress = (offset - 0.5) * 2
 
-      // Pozisyon: Merkezden (X:0) -> Sola (X:-5)
-      group.current.position.x = THREE.MathUtils.lerp(0, -5, progress)
+      group.current.position.x = THREE.MathUtils.lerp(0, -6, progress)
       group.current.position.y = THREE.MathUtils.lerp(1.5, -1, progress) + floatY
-      group.current.position.z = THREE.MathUtils.lerp(4, 0, progress)
+      group.current.position.z = THREE.MathUtils.lerp(0.5, 0, progress)
 
-      // Rotasyon: Dokunma açısından -> Etkileyici bir dönüşle (Spin) fiyat kartı yanına
-      group.current.rotation.x = THREE.MathUtils.lerp(Math.PI / 2.5, 0.2, progress)
-      group.current.rotation.y = THREE.MathUtils.lerp(0, Math.PI * 2.5, progress) // 1.25 tur dönüyor
+      // Vurma açısından -> Normal duruşa geri dönüp kendi ekseninde takla atma (spin)
+      group.current.rotation.x = THREE.MathUtils.lerp(Math.PI / 2, 0.2, progress)
+      group.current.rotation.y = THREE.MathUtils.lerp(0, Math.PI * 2, progress)
       group.current.rotation.z = THREE.MathUtils.lerp(0, -0.2, progress)
     }
   })
 
-  // Premium Cam (Glassmorphism) Materyali
   const glassMaterial = new THREE.MeshPhysicalMaterial({
-    color: '#0f172a',     // Koyu lacivert/siyah ton
-    emissive: '#00f2fe',  // Hafif neon mavi parlaması
+    color: '#0f172a',
+    emissive: '#00f2fe',
     emissiveIntensity: 0.1,
     metalness: 0.5,
     roughness: 0.1,
-    transmission: 0.95,   // Cam şeffaflığı (Işığı geçirgenlik)
-    ior: 1.5,             // Kırılma indisi (Cam için 1.5 ideal)
-    thickness: 2.0,       // Hacimsel kalınlık
+    transmission: 0.95,
+    ior: 1.5,
+    thickness: 2.0,
     transparent: true,
     opacity: 1,
     clearcoat: 1.0,
     clearcoatRoughness: 0.1,
   })
 
-  // Materyalleri Uygulama (Tüm modele cam dokusu veriliyor)
   damgaScene.traverse((child) => {
     if (child instanceof THREE.Mesh) {
       child.material = glassMaterial
@@ -81,8 +84,8 @@ export function NfcStamp() {
   })
 
   return (
-    // Model scale'ini 0.1'den 0.15'e çıkaralım ki sahnede daha heybetli dursun
-    <group ref={group} dispose={null} scale={0.15}>
+    // Boyutu tekrar 0.1 yaptık
+    <group ref={group} dispose={null} scale={0.1}>
       <Center>
         <primitive object={damgaScene} />
       </Center>
@@ -90,5 +93,4 @@ export function NfcStamp() {
   )
 }
 
-// Performans için modeli önden yükleyelim (preload)
 useGLTF.preload('/damga.glb')
