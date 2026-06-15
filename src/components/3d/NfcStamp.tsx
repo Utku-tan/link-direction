@@ -8,9 +8,8 @@ import * as THREE from 'three'
 export function NfcStamp() {
   const group = useRef<THREE.Group>(null)
   
-  // Modelleri yüklüyoruz.
-  const { scene: sapiScene } = useGLTF('/damga_sapi.glb')
-  const { scene: ucuScene } = useGLTF('/damga_ucu.glb')
+  // Tek bir modeli yüklüyoruz.
+  const { scene: damgaScene } = useGLTF('/damga.glb')
 
   // Mouse hareketine göre hafif salınım (float) ve dönüş
   useFrame((state) => {
@@ -43,30 +42,10 @@ export function NfcStamp() {
     clearcoatRoughness: 0.1,
   })
 
-  // Daha parlak ve belirgin bir cam (Belki uç kısım için)
-  const neonGlassMaterial = new THREE.MeshPhysicalMaterial({
-    color: '#00f2fe',     // Neon mavi
-    metalness: 0.2,
-    roughness: 0.05,
-    transmission: 0.8,
-    ior: 1.5,
-    thickness: 1.0,
-    transparent: true,
-    opacity: 0.9,
-  })
-
-  // Materyalleri Uygulama
-  sapiScene.traverse((child) => {
+  // Materyalleri Uygulama (Tüm modele cam dokusu veriliyor)
+  damgaScene.traverse((child) => {
     if (child instanceof THREE.Mesh) {
       child.material = glassMaterial
-      child.castShadow = true
-      child.receiveShadow = true
-    }
-  })
-
-  ucuScene.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
-      child.material = neonGlassMaterial
       child.castShadow = true
       child.receiveShadow = true
     }
@@ -76,21 +55,11 @@ export function NfcStamp() {
     <group ref={group} dispose={null} scale={0.1}>
       {/* Modeli merkeze almak için Center kullanıyoruz. Böylece kenarlara çarpması engellenir. */}
       <Center>
-        <group>
-          {/* Sapı (sapiScene) YUKARI almak için position ekliyoruz */}
-          <group rotation={[Math.PI, 0, 0]} position={[0, 20, 0]}>
-            <primitive object={sapiScene} />
-          </group>
-          {/* Ucu (ucuScene) AŞAĞI almak için position ekliyoruz */}
-          <group position={[0, -20, 0]}>
-            <primitive object={ucuScene} />
-          </group>
-        </group>
+        <primitive object={damgaScene} />
       </Center>
     </group>
   )
 }
 
-// Performans için modelleri önden yükleyelim (preload)
-useGLTF.preload('/damga_sapi.glb')
-useGLTF.preload('/damga_ucu.glb')
+// Performans için modeli önden yükleyelim (preload)
+useGLTF.preload('/damga.glb')
