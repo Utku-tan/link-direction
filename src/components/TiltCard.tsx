@@ -5,10 +5,12 @@ import React, { useState, useRef } from 'react';
 interface TiltCardProps {
   children: React.ReactNode;
   className?: string;
+  wrapperClassName?: string;
 }
 
-export function TiltCard({ children, className = '' }: TiltCardProps) {
+export function TiltCard({ children, className = '', wrapperClassName = '' }: TiltCardProps) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -27,10 +29,12 @@ export function TiltCard({ children, className = '' }: TiltCardProps) {
     const tiltY = ((x - centerX) / centerX) * 15;
     
     setTilt({ x: tiltX, y: tiltY });
+    setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
     setTilt({ x: 0, y: 0 });
+    setIsHovered(false);
   };
 
   // Gölge pozisyonu eğime göre değişsin (Aydınlatma efekti)
@@ -43,15 +47,19 @@ export function TiltCard({ children, className = '' }: TiltCardProps) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      // Kartın kendisi ve hover durumu
-      className={`relative cursor-pointer transition-transform duration-200 ease-out transform-gpu ${className}`}
-      style={{
-        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1.02, 1.02, 1.02)`,
-        // Neon mavi bir 3D gölge efekti
-        boxShadow: `${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0, 242, 254, 0.15)`,
-      }}
+      // Sabit kapsayıcı - Mouse olaylarını yakalar ve asla hareket etmez, böylece sınırda titreme (jitter) yapmaz.
+      className={`relative perspective-[1000px] ${wrapperClassName}`}
     >
-      {children}
+      <div
+        // Kartın kendisi ve görsel özellikleri - Sadece bu div eğilir
+        className={`transition-transform duration-200 ease-out transform-gpu ${className}`}
+        style={{
+          transform: isHovered ? `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1.02, 1.02, 1.02)` : 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+          boxShadow: isHovered ? `${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0, 242, 254, 0.15)` : 'none',
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

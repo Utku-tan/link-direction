@@ -69,7 +69,10 @@ export default function LandingPage() {
             <div className="flex md:grid md:grid-cols-3 gap-8 overflow-x-auto snap-x snap-mandatory px-4 sm:px-6 pb-12 pt-12 -mx-4 sm:-mx-6 hide-scrollbar">
               
               {/* Kart 1 */}
-              <TiltCard className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl min-w-[300px] snap-center">
+              <TiltCard 
+                wrapperClassName="min-w-[300px] snap-center"
+                className="h-full bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl cursor-pointer"
+              >
                 <div className="w-12 h-12 rounded-xl bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-6">
                   <Cpu className="w-6 h-6 text-[#00f2fe]" />
                 </div>
@@ -78,7 +81,10 @@ export default function LandingPage() {
               </TiltCard>
 
               {/* Kart 2 */}
-              <TiltCard className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl min-w-[300px] snap-center">
+              <TiltCard 
+                wrapperClassName="min-w-[300px] snap-center"
+                className="h-full bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl cursor-pointer"
+              >
                 <div className="w-12 h-12 rounded-xl bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-6">
                   <Server className="w-6 h-6 text-[#00f2fe]" />
                 </div>
@@ -87,7 +93,10 @@ export default function LandingPage() {
               </TiltCard>
 
               {/* Kart 3 */}
-              <TiltCard className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl min-w-[300px] snap-center">
+              <TiltCard 
+                wrapperClassName="min-w-[300px] snap-center"
+                className="h-full bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl cursor-pointer"
+              >
                 <div className="w-12 h-12 rounded-xl bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-6">
                   <Fingerprint className="w-6 h-6 text-[#00f2fe]" />
                 </div>
@@ -109,7 +118,10 @@ export default function LandingPage() {
             </div>
 
             <div className="w-full max-w-lg mx-auto py-12">
-              <TiltCard className="relative bg-[#0f172a]/80 backdrop-blur-xl border border-[#00f2fe]/30 rounded-3xl p-10 mx-4">
+              <TiltCard 
+                wrapperClassName="mx-4"
+                className="relative bg-[#0f172a]/80 backdrop-blur-xl border border-[#00f2fe]/30 rounded-3xl p-10 cursor-pointer"
+              >
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00f2fe] text-black text-xs font-bold px-6 py-2 rounded-full uppercase tracking-wider">
                   Kurumsal Tercih
                 </div>
