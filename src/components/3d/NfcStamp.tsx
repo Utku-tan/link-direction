@@ -22,32 +22,41 @@ export function NfcStamp() {
     // Yüzerlik (floating) sadece belirli aralıklarda
     const floatY = Math.sin(t * 3) * 0.1
 
-    if (offset < 0.20) {
-      // 1. AŞAMA (0.0 - 0.20): Hero Bölümü. Damga ekranın çok dışında gizli bekler.
-      group.current.position.set(15, 15, 3)
-      group.current.rotation.set(0.5, -Math.PI / 2, 0.2)
+    if (offset < 0.25) {
+      // 1. AŞAMA (0.0 - 0.25): Hero Bölümü -> Telefon Bölümüne Geçiş
+      // Başlangıç: X:5 (Sağ), Y:-2.5 (Daha aşağıda), Z:1
+      // Bitiş: X:0, Y:4 (Telefonun tam üstünde havada)
+      const progress = offset / 0.25
       
-    } else if (offset >= 0.20 && offset < 0.48) {
-      // 2. AŞAMA (0.20 - 0.48): Telefona Yaklaşma (Geniş kavisle havadan gelir)
-      const progress = (offset - 0.20) / 0.28
-      
-      group.current.position.x = THREE.MathUtils.lerp(15, 0, progress)
-      group.current.position.y = THREE.MathUtils.lerp(15, 4, progress) + floatY
-      group.current.position.z = THREE.MathUtils.lerp(3, 2, progress)
+      group.current.position.x = THREE.MathUtils.lerp(5, 0, progress)
+      // Damga başlangıçta daha aşağıda (-2.5), scroll yapıldıkça ekranla birlikte yukarı (4) çıkıp telefona tepeden bakacak pozisyonu alır.
+      group.current.position.y = THREE.MathUtils.lerp(-2.5, 4, progress) + floatY
+      group.current.position.z = THREE.MathUtils.lerp(1, 2, progress)
 
-      // Sapı yukarıda, düz basmaya hazırlanıyor
+      // Dönerek geliş efekti
       group.current.rotation.x = THREE.MathUtils.lerp(0.5, -Math.PI / 2, progress)
-      group.current.rotation.y = THREE.MathUtils.lerp(-0.5, 0, progress)
-      group.current.rotation.z = THREE.MathUtils.lerp(0.2, 0, progress)
+      group.current.rotation.y = THREE.MathUtils.lerp(-Math.PI / 4, 0, progress)
+      group.current.rotation.z = THREE.MathUtils.lerp(0.5, 0, progress)
+      
+    } else if (offset >= 0.25 && offset < 0.48) {
+      // 2. AŞAMA (0.25 - 0.48): Telefonun Üstünde Hedefe Kilitlenme
+      const progress = (offset - 0.25) / 0.23
+      
+      group.current.position.x = 0
+      // Vurmadan önce havada çok hafif aşağı doğru (4'ten 3.5'e) gerilim yaratma
+      group.current.position.y = THREE.MathUtils.lerp(4, 3.5, progress) + floatY
+      group.current.position.z = 2
+
+      // Tam düz duruş
+      group.current.rotation.set(-Math.PI / 2, 0, 0)
 
     } else if (offset >= 0.48 && offset < 0.50) {
       // 3. AŞAMA (0.48 - 0.50): BAM! Vurma
       const progress = (offset - 0.48) / 0.02
       
       group.current.position.x = 0
-      // Telefon z-20 DOM'da tam ortada. 3D'de Y: 0 tam orta demek.
-      // Ekrana yapışması için Y: 0.1, Z: 0.5
-      group.current.position.y = THREE.MathUtils.lerp(4, 0.1, progress)
+      // 3.5'ten 0.1'e anında çarpma
+      group.current.position.y = THREE.MathUtils.lerp(3.5, 0.1, progress)
       group.current.position.z = THREE.MathUtils.lerp(2, 0.5, progress)
       
       group.current.rotation.set(-Math.PI / 2, 0, 0)
