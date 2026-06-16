@@ -8,24 +8,9 @@ import * as THREE from 'three'
 function DamgaModel() {
   const { scene } = useGLTF('/damga.glb')
   
-  const glassMaterial = new THREE.MeshPhysicalMaterial({
-    color: '#0f172a',
-    emissive: '#00f2fe',
-    emissiveIntensity: 0.1,
-    metalness: 0.5,
-    roughness: 0.1,
-    transmission: 0.95,
-    ior: 1.5,
-    thickness: 2.0,
-    transparent: true,
-    opacity: 1,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.1,
-  })
-
+  // Sadece gölge ayarlarını yapıyoruz, orijinal materyalleri (kullanıcının GLB'sindeki) bozmuyoruz.
   scene.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      child.material = glassMaterial
       child.castShadow = true
       child.receiveShadow = true
     }
@@ -33,8 +18,8 @@ function DamgaModel() {
 
   return (
     <Center>
-      {/* 3D derinliğin hep hissedilmesi için temel bir açı veriyoruz */}
-      <primitive object={scene} rotation={[0.2, -Math.PI / 2, 0.2]} scale={1.5} />
+      {/* Modelin orijinal boyutu çok büyük olduğu için scale={0.1} yapıyoruz */}
+      <primitive object={scene} rotation={[0.2, -Math.PI / 2, 0.2]} scale={0.1} />
     </Center>
   )
 }
