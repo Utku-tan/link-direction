@@ -20,6 +20,10 @@ export default function LandingPage() {
             <Link href="/register" className="px-5 py-2 text-sm font-medium bg-white text-black hover:bg-zinc-200 rounded-lg transition-all duration-200">
               Kayıt Ol
             </Link>
+          </div>
+        </div>
+      </nav>
+
       <main className="relative z-10 w-full">
         {/* Section 1: Hero */}
         <section className="min-h-[80vh] w-full relative flex flex-col justify-center pt-32 pb-20 text-center">
