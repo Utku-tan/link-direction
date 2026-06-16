@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { ArrowRight, Cpu, ShieldCheck, Database, Server, Fingerprint, Lock, CheckCircle2 } from 'lucide-react'
-import { Scene } from '@/components/3d/Scene'
+import { StampAnimation } from '@/components/StampAnimation'
 import { PhoneMockup } from '@/components/PhoneMockup'
 
 export default function LandingPage() {
@@ -25,10 +25,8 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* 3D Sahne - Clicks Pass Through */}
-      <div className="fixed inset-0 w-full h-full z-40 pointer-events-none">
-        <Scene />
-      </div>
+      {/* Framer Motion ile Scroll-Linked Fiziksel Damga Animasyonu */}
+      <StampAnimation />
 
       <main className="relative z-10 w-full">
         {/* Section 1: Hero */}
