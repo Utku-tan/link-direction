@@ -2,15 +2,15 @@
 
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF, Center } from '@react-three/drei'
+import { useGLTF, Center, ContactShadows } from '@react-three/drei'
 import { useScroll, useSpring } from 'framer-motion'
 import * as THREE from 'three'
 
 export function NfcStamp() {
   const group = useRef<THREE.Group>(null)
+  const shadowRef = useRef<THREE.Group>(null)
   const { scene: damgaScene } = useGLTF('/damga.glb')
   
-  // Native window scroll kontrolü (framer-motion)
   const { scrollYProgress } = useScroll()
   const smoothProgress = useSpring(scrollYProgress, { damping: 20, stiffness: 100 })
 
@@ -19,71 +19,79 @@ export function NfcStamp() {
     const offset = smoothProgress.get()
     const t = state.clock.getElapsedTime()
     
-    // Yüzerlik (floating) sadece belirli aralıklarda
     const floatY = Math.sin(t * 3) * 0.1
 
+    // 1. INTRO ANİMASYONU: Masaya düşme ve yuvarlanma efekti
+    const offsetFade = 1 - Math.min(1, offset / 0.05)
+    let introY = 0
+    let introRotZ = 0
+    let introRotX = 0
+
+    if (t < 1.5 && offsetFade > 0) {
+      const p = t / 1.5
+      const dropHeight = Math.pow(1 - p, 2) * 8
+      const bounce = Math.abs(Math.sin(p * Math.PI * 3)) * (1 - p) * 3
+      introY = (dropHeight + bounce) * offsetFade
+      introRotZ = (1 - p) * Math.PI * 2 * offsetFade
+      introRotX = (1 - p) * Math.PI * offsetFade
+    }
+
     if (offset < 0.25) {
-      // 1. AŞAMA (0.0 - 0.25): Hero Bölümü -> Telefon Bölümüne Geçiş
-      // Başlangıç: X:5 (Sağ), Y:-2.5 (Daha aşağıda), Z:1
-      // Bitiş: X:0, Y:4 (Telefonun tam üstünde havada)
       const progress = offset / 0.25
-      
-      group.current.position.x = THREE.MathUtils.lerp(5, 0, progress)
-      // Damga başlangıçta daha aşağıda (-2.5), scroll yapıldıkça ekranla birlikte yukarı (4) çıkıp telefona tepeden bakacak pozisyonu alır.
-      group.current.position.y = THREE.MathUtils.lerp(-2.5, 4, progress) + floatY
+      group.current.position.x = THREE.MathUtils.lerp(5, 4, progress)
+      group.current.position.y = THREE.MathUtils.lerp(-2.5, 4, progress) + floatY + introY
       group.current.position.z = THREE.MathUtils.lerp(1, 2, progress)
 
-      // Dönerek geliş efekti
-      group.current.rotation.x = THREE.MathUtils.lerp(0.5, -Math.PI / 2, progress)
-      group.current.rotation.y = THREE.MathUtils.lerp(-Math.PI / 4, 0, progress)
-      group.current.rotation.z = THREE.MathUtils.lerp(0.5, 0, progress)
-      
-    } else if (offset >= 0.25 && offset < 0.48) {
-      // 2. AŞAMA (0.25 - 0.48): Telefonun Üstünde Hedefe Kilitlenme
-      const progress = (offset - 0.25) / 0.23
-      
+      group.current.rotation.x = THREE.MathUtils.lerp(-Math.PI / 3, -Math.PI / 2, progress) + introRotX
+      group.current.rotation.y = THREE.MathUtils.lerp(Math.PI / 4, 0, progress)
+      group.current.rotation.z = THREE.MathUtils.lerp(0.2, 0, progress) + introRotZ
+
+    } else if (offset >= 0.25 && offset < 0.45) {
+      const progress = (offset - 0.25) / 0.20
+      group.current.position.x = THREE.MathUtils.lerp(4, 0, progress)
+      group.current.position.y = 4 + floatY
+      group.current.position.z = 2
+      group.current.rotation.set(-Math.PI / 2, 0, 0)
+
+    } else if (offset >= 0.45 && offset < 0.48) {
+      const progress = (offset - 0.45) / 0.03
       group.current.position.x = 0
-      // Vurmadan önce havada çok hafif aşağı doğru (4'ten 3.5'e) gerilim yaratma
       group.current.position.y = THREE.MathUtils.lerp(4, 3.5, progress) + floatY
       group.current.position.z = 2
-
-      // Tam düz duruş
       group.current.rotation.set(-Math.PI / 2, 0, 0)
 
     } else if (offset >= 0.48 && offset < 0.50) {
-      // 3. AŞAMA (0.48 - 0.50): BAM! Vurma
       const progress = (offset - 0.48) / 0.02
-      
       group.current.position.x = 0
-      // 3.5'ten 0.1'e anında çarpma
       group.current.position.y = THREE.MathUtils.lerp(3.5, 0.1, progress)
       group.current.position.z = THREE.MathUtils.lerp(2, 0.5, progress)
-      
       group.current.rotation.set(-Math.PI / 2, 0, 0)
 
     } else if (offset >= 0.50 && offset < 0.65) {
-      // 4. AŞAMA (0.50 - 0.65): Telefonla Beraber Sabit Kalma (Sticky Scroll)
-      // Kullanıcı sayfayı kaydırıyor ama telefon sticky olduğu için sabit.
-      // Damga da telefonun üstünde tam bu pozisyonda basılı bekleyecek!
       group.current.position.set(0, 0.1, 0.5)
       group.current.rotation.set(-Math.PI / 2, 0, 0)
 
     } else if (offset >= 0.65 && offset < 0.80) {
-      // 5. AŞAMA (0.65 - 0.80): Ekranda Ayrılma ve Takla Atarak Sola Kayma
       const progress = (offset - 0.65) / 0.15
-
       group.current.position.x = THREE.MathUtils.lerp(0, -6, progress)
       group.current.position.y = THREE.MathUtils.lerp(0.1, -1, progress) + floatY
       group.current.position.z = THREE.MathUtils.lerp(0.5, 0, progress)
-
       group.current.rotation.x = THREE.MathUtils.lerp(-Math.PI / 2, 0.2, progress)
       group.current.rotation.y = THREE.MathUtils.lerp(0, Math.PI * 2, progress)
       group.current.rotation.z = THREE.MathUtils.lerp(0, -0.2, progress)
       
     } else {
-      // 6. AŞAMA (0.80 - 1.0): Fiyatlandırma Bölümü (Solda Sabit)
       group.current.position.set(-6, -1 + floatY, 0)
       group.current.rotation.set(0.2, Math.PI * 2, -0.2)
+    }
+
+    if (shadowRef.current) {
+      const shadowOpacity = THREE.MathUtils.lerp(0.6, 0, Math.min(1, offset / 0.1))
+      shadowRef.current.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material) {
+          child.material.opacity = shadowOpacity
+        }
+      })
     }
   })
 
@@ -111,11 +119,23 @@ export function NfcStamp() {
   })
 
   return (
-    <group ref={group} dispose={null} scale={0.1}>
-      <Center>
-        <primitive object={damgaScene} />
-      </Center>
-    </group>
+    <>
+      <group ref={group} dispose={null} scale={0.1}>
+        <Center>
+          <primitive object={damgaScene} />
+        </Center>
+      </group>
+
+      <ContactShadows 
+        ref={shadowRef}
+        position={[5, -2.5, 1]} 
+        opacity={0.6} 
+        scale={15} 
+        blur={2} 
+        far={5}
+        color="#000000"
+      />
+    </>
   )
 }
 
