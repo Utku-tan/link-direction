@@ -3,6 +3,7 @@ import { Logo } from '@/components/logo'
 import { ArrowRight, Cpu, ShieldCheck, Database, Server, Fingerprint, Lock, CheckCircle2 } from 'lucide-react'
 import { StampAnimation } from '@/components/StampAnimation'
 import { PhoneMockup } from '@/components/PhoneMockup'
+import { TiltCard } from '@/components/TiltCard'
 
 export default function LandingPage() {
   return (
@@ -81,31 +82,31 @@ export default function LandingPage() {
               <div className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto snap-x snap-mandatory px-4 sm:px-6 pb-6 hide-scrollbar">
                 
                 {/* Kart 1 */}
-                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
+                <TiltCard className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
                   <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                     <Cpu className="w-5 h-5 text-[#00f2fe]" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">1. Fiziksel Temas</h3>
                   <p className="text-zinc-400 text-xs leading-relaxed">Müşteri cihazına NFC damga ile fiziksel yetkilendirme gönderilir.</p>
-                </div>
+                </TiltCard>
 
                 {/* Kart 2 */}
-                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
+                <TiltCard className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
                   <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                     <Server className="w-5 h-5 text-[#00f2fe]" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">2. Canlı Doğrulama</h3>
                   <p className="text-zinc-400 text-xs leading-relaxed">Kasiyer onayı olmadan işlem veritabanına işlenmez.</p>
-                </div>
+                </TiltCard>
 
                 {/* Kart 3 */}
-                <div className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
+                <TiltCard className="bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl min-w-[280px] snap-center">
                   <div className="w-10 h-10 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/20 flex items-center justify-center mb-4">
                     <Fingerprint className="w-5 h-5 text-[#00f2fe]" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">3. Hile Koruması</h3>
                   <p className="text-zinc-400 text-xs leading-relaxed">Benzersiz cihaz parmak izi ile mükerrer işlemler anında reddedilir.</p>
-                </div>
+                </TiltCard>
 
               </div>
             </div>
@@ -121,7 +122,7 @@ export default function LandingPage() {
                 <p className="text-zinc-400">İş modelinize en uygun entegrasyonu seçin.</p>
               </div>
 
-              <div className="relative bg-[#0f172a]/80 backdrop-blur-xl border border-[#00f2fe]/30 rounded-3xl p-8 shadow-[0_0_40px_rgba(0,242,254,0.1)]">
+              <TiltCard className="relative bg-[#0f172a]/80 backdrop-blur-xl border border-[#00f2fe]/30 rounded-3xl p-8">
                 <div className="absolute -top-4 left-8 bg-[#00f2fe] text-black text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
                   Kurumsal Tercih
                 </div>
@@ -146,10 +147,10 @@ export default function LandingPage() {
                     <span className="text-sm text-zinc-200">Gerçek Zamanlı Kasa Dashboard Akışı</span>
                   </li>
                 </ul>
-                <Link href="/register" className="block w-full py-4 px-4 bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl text-center text-sm font-bold text-black transition-colors">
+                <Link href="/register" className="block w-full py-4 px-4 bg-[#00f2fe] hover:bg-[#4facfe] rounded-xl text-center text-sm font-bold text-black transition-colors relative z-10">
                   İşletmeniz İçin Başvurun
                 </Link>
-              </div>
+              </TiltCard>
             </div>
           </div>
         </section>
