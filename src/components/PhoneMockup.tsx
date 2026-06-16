@@ -21,9 +21,9 @@ export function PhoneMockup() {
   const [isTapped, setIsTapped] = useState(false)
   const { scrollYProgress } = useScroll()
 
-  // Damganın vurma anı (offset >= 0.48) tam olarak senkronize ediliyor
+  // Damganın vurma anı (offset >= 0.50) tam olarak senkronize ediliyor
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest >= 0.48 && latest <= 0.8) {
+    if (latest >= 0.50 && latest <= 0.8) {
       setIsTapped(true)
     } else {
       setIsTapped(false)

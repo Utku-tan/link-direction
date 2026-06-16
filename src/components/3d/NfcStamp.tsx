@@ -22,17 +22,17 @@ export function NfcStamp() {
     // Yüzerlik (floating) sadece belirli aralıklarda
     const floatY = Math.sin(t * 3) * 0.1
 
-    if (offset < 0.25) {
-      // 1. AŞAMA (0.0 - 0.25): Hero Bölümü. Damga yukarıda bekler.
-      group.current.position.set(6, 6, 3)
+    if (offset < 0.20) {
+      // 1. AŞAMA (0.0 - 0.20): Hero Bölümü. Damga ekranın çok dışında gizli bekler.
+      group.current.position.set(15, 15, 3)
       group.current.rotation.set(0.5, -Math.PI / 2, 0.2)
       
-    } else if (offset >= 0.25 && offset < 0.48) {
-      // 2. AŞAMA (0.25 - 0.48): Telefona Yaklaşma
-      const progress = (offset - 0.25) / 0.23
+    } else if (offset >= 0.20 && offset < 0.48) {
+      // 2. AŞAMA (0.20 - 0.48): Telefona Yaklaşma (Geniş kavisle havadan gelir)
+      const progress = (offset - 0.20) / 0.28
       
-      group.current.position.x = THREE.MathUtils.lerp(6, 0, progress)
-      group.current.position.y = THREE.MathUtils.lerp(6, 4, progress) + floatY
+      group.current.position.x = THREE.MathUtils.lerp(15, 0, progress)
+      group.current.position.y = THREE.MathUtils.lerp(15, 4, progress) + floatY
       group.current.position.z = THREE.MathUtils.lerp(3, 2, progress)
 
       // Sapı yukarıda, düz basmaya hazırlanıyor
