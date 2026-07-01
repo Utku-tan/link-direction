@@ -1,13 +1,20 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { useScroll, useMotionValueEvent } from "framer-motion";
+import { useScroll, useMotionValueEvent, useSpring } from "framer-motion";
 
 export function ScrollVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll();
+  
+  // Kaydırma hareketini yumuşatmak için Spring animasyonu ekliyoruz
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 50,
+    damping: 20,
+    restDelta: 0.001
+  });
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+  useMotionValueEvent(smoothProgress, "change", (latest) => {
     if (videoRef.current && !isNaN(videoRef.current.duration)) {
       videoRef.current.currentTime = videoRef.current.duration * latest;
     }
