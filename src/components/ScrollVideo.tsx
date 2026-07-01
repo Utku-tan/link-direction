@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { useScroll, useMotionValueEvent, useSpring } from "framer-motion";
+import { useScroll, useSpring, useAnimationFrame } from "framer-motion";
 
 export function ScrollVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -14,9 +14,15 @@ export function ScrollVideo() {
     restDelta: 0.001
   });
 
-  useMotionValueEvent(smoothProgress, "change", (latest) => {
-    if (videoRef.current && !isNaN(videoRef.current.duration)) {
-      videoRef.current.currentTime = videoRef.current.duration * latest;
+  // Framer Motion'ın her karede (60fps) çalışan döngüsüyle videoyu senkronize et
+  useAnimationFrame(() => {
+    if (videoRef.current && videoRef.current.readyState >= 1 && !isNaN(videoRef.current.duration)) {
+      const targetTime = videoRef.current.duration * smoothProgress.get();
+      
+      // Sadece zaman farkı belirginse (0.01 saniyeden büyükse) videoyu sar (Performans için)
+      if (Math.abs(videoRef.current.currentTime - targetTime) > 0.01) {
+        videoRef.current.currentTime = targetTime;
+      }
     }
   });
 
