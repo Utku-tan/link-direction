@@ -2,13 +2,16 @@ import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { ArrowRight, Cpu, ShieldCheck, Database, Server, Fingerprint, Lock, CheckCircle2 } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
+import { ScrollVideo } from '@/components/ScrollVideo'
 
 export default function LandingPage() {
   return (
     // overflow-x-hidden kullanıldığında CSS sticky çalışmaz! Bunu kaldırdım.
-    <div className="bg-[#030712] text-zinc-100 font-sans selection:bg-[#00f2fe]/30 w-full overflow-x-clip">
+    <div className="bg-transparent text-zinc-100 font-sans selection:bg-[#00f2fe]/30 w-full overflow-x-clip min-h-[300vh]">
+      <ScrollVideo />
+      
       {/* Navbar */}
-      <nav className="fixed w-full border-b border-white/5 backdrop-blur-xl bg-[#030712]/80 top-0 z-50">
+      <nav className="fixed w-full border-b border-white/5 backdrop-blur-xl bg-[#030712]/60 top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/">
             <Logo />
@@ -155,7 +158,7 @@ export default function LandingPage() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-white/5 py-12 bg-[#030712] relative z-20 pointer-events-auto">
+        <footer className="border-t border-white/5 py-12 bg-[#030712]/50 backdrop-blur-lg relative z-20 pointer-events-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <Logo size="sm" />
             <p className="text-sm text-zinc-600 font-medium">© 2026 Refly.world. Güvenli Altyapı Çözümleri.</p>
